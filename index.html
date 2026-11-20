@@ -253,15 +253,12 @@ rumah pager hitam</textarea>
   <script>
     /* =====================================================================
        RYS TOOLS v25
-       - Tombol "Tokopedia" per hasil: salin (format sama seperti Salin biasa)
-         lalu buka halaman Tambah Alamat Tokopedia di tab baru.
-       - Tombol Salin & Tokopedia diletakkan di baris aksi BAWAH alamat
-         (sebaris dengan badge sumber & link Google Maps) agar tidak
-         bertabrakan dengan teks alamat.
-       - DATA_DEFAULT_NAMA disamakan dengan isi awal textarea (47 baris)
-         sehingga Reset ke Data Default konsisten.
-       - FIX: hilangkan kurung ekstra di geocodeGoogle (menyebabkan
-         SyntaxError dan mematikan seluruh JS).
+       - Tombol "Tokopedia" per hasil: salin dengan format SAMA PERSIS
+         seperti tombol Salin biasa (teksSingle), lalu buka halaman
+         Daftar Alamat Tokopedia di tab baru.
+       - Tombol Salin & Tokopedia di baris aksi BAWAH alamat.
+       - DATA_DEFAULT_NAMA disamakan dengan isi awal textarea (47 baris).
+       - FIX: hilangkan kurung ekstra di geocodeGoogle (SyntaxError).
        ===================================================================== */
 
     const KEYS_GEOPIFY_DEFAULT = [
@@ -830,8 +827,9 @@ rumah pager hitam</textarea>
       btnTokopedia.className='inline-flex items-center gap-1 text-xs font-semibold text-slate-500 hover:text-emerald-300 transition';
       btnTokopedia.innerHTML='<img src="https://unpkg.com/lucide-static@1.44.0/icons/store.svg" alt="" class="w-3.5 h-3.5 invert opacity-70" onerror="this.style.display=\'none\';"><span class="label">Tokopedia</span>';
       btnTokopedia.addEventListener('click',()=>{
+        // Format sama persis dengan tombol Salin biasa
         salin(teksSingle(a),btnTokopedia);
-        window.open('https://www.tokopedia.com/alamat/tambah','_blank','noopener,noreferrer');
+        window.open('https://www.tokopedia.com/user/settings/address','_blank','noopener,noreferrer');
       });
       grupAksi.appendChild(btnTokopedia);
       aksi.appendChild(grupAksi);
