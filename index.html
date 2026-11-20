@@ -1,0 +1,1241 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RYS Tools — Random Address Generator</title>
+<script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+</head>
+<body style="font-family:'Inter',system-ui,sans-serif" class="min-h-screen bg-[#0b0f1a] text-slate-200 antialiased">
+
+  <div class="fixed inset-0 pointer-events-none overflow-hidden" aria-hidden="true">
+    <div class="absolute -top-32 -left-24 w-95 h-95 rounded-full bg-indigo-600/20 blur-3xl"></div>
+    <div class="absolute top-1/3 -right-24 w-95 h-95 rounded-full bg-fuchsia-600/15 blur-3xl"></div>
+    <div class="absolute bottom-0 left-1/4 w-80 h-80 rounded-full bg-amber-500/10 blur-3xl"></div>
+  </div>
+
+  <div class="fixed top-3 right-3 sm:top-5 sm:right-5 z-50 inline-flex items-center gap-1.5 bg-emerald-400/10 ring-1 ring-emerald-400/25 text-emerald-300 text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.3em] px-3 py-1.5 rounded-full backdrop-blur-xl shadow-lg shadow-black/30 select-none" title="Alat untuk penggunaan pribadi">
+    <img src="https://unpkg.com/lucide-static@1.44.0/icons/lock.svg" alt="" class="w-3 h-3 invert opacity-80" onerror="this.style.display='none';"> Private
+  </div>
+
+  <main class="relative max-w-2xl mx-auto px-4 py-12 sm:py-16">
+    <header class="text-center mb-8">
+      <div class="inline-flex items-center gap-2 bg-white/[0.05] ring-1 ring-white/10 text-indigo-300 text-[11px] font-bold uppercase tracking-[0.4em] px-4 py-1.5 rounded-full mb-5">
+        <span class="w-1.5 h-1.5 rounded-full bg-indigo-400 animate-pulse"></span> Smart Randomizer
+      </div>
+      <h1 class="text-3xl sm:text-5xl font-black tracking-tight bg-gradient-to-r from-indigo-300 via-white to-fuchsia-300 bg-clip-text text-transparent drop-shadow-[0_0_30px_rgba(129,140,248,0.35)]">RYS TOOLS</h1>
+      <p class="mt-2 text-[13px] font-semibold uppercase tracking-[0.25em] text-slate-500">Random Address Generator</p>
+      <p class="mt-4 text-sm text-slate-400 max-w-md mx-auto leading-relaxed">Meracik alamat nyata dari peta — Geoapify / OpenStreetMap / Google.</p>
+      <div class="mt-4 inline-flex items-center gap-2">
+        <span id="badgeSumber" class="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-widest text-slate-300 bg-white/[0.05] ring-1 ring-white/10 rounded-full px-3.5 py-1.5 backdrop-blur-xl select-none">
+          <img src="https://unpkg.com/lucide-static@1.44.0/icons/database.svg" alt="" class="w-3.5 h-3.5 invert opacity-70" onerror="this.style.display='none';"> Offline
+        </span>
+      </div>
+    </header>
+
+    <form id="formGenerator" class="bg-white/[0.04] backdrop-blur-xl rounded-3xl ring-1 ring-white/10 shadow-2xl shadow-black/40 p-6 sm:p-8 space-y-6">
+
+      <fieldset class="rounded-2xl ring-1 ring-white/10 bg-white/[0.02] p-4 sm:p-5 space-y-4">
+        <legend class="px-1 text-sm font-semibold text-slate-300">
+          <span class="inline-flex items-center gap-1.5">
+            <img src="https://unpkg.com/lucide-static@1.44.0/icons/map-pin.svg" alt="" class="w-4 h-4 invert opacity-70" onerror="this.style.display='none';"> Lokasi &amp; Sumber Peta
+          </span>
+        </legend>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <label class="block">
+            <span class="block text-xs font-semibold uppercase tracking-widest text-slate-500 mb-1.5">Kota / Wilayah (ketik atau pilih)</span>
+            <input type="text" id="inputKota" list="daftarKota" placeholder="mis. Solo, Ubud, Banda Aceh…" autocomplete="off"
+                   class="w-full rounded-xl border border-white/10 bg-white/[0.06] px-3 py-2.5 text-sm text-slate-100 placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-indigo-500/60 transition">
+            <datalist id="daftarKota"></datalist>
+            <p id="statusKotaCustom" class="mt-1 text-[11px] text-slate-500"></p>
+          </label>
+          <div class="flex items-end">
+            <button type="button" id="btnSync" class="w-full inline-flex items-center justify-center gap-2 text-xs font-bold text-indigo-200 bg-indigo-500/15 hover:bg-indigo-500/25 ring-1 ring-indigo-500/30 rounded-xl px-3.5 py-2.5 transition disabled:opacity-50 disabled:cursor-not-allowed">
+              <img src="https://unpkg.com/lucide-static@1.44.0/icons/refresh-cw.svg" alt="" class="w-3.5 h-3.5 invert opacity-80" onerror="this.style.display='none';"> <span id="teksSync">Sinkronkan dari peta</span>
+            </button>
+          </div>
+        </div>
+
+        <label class="flex items-center gap-2.5 text-xs text-slate-400 cursor-pointer select-none">
+          <input type="checkbox" id="ckAutoSync" checked class="appearance-none w-4 h-4 rounded border-2 border-slate-600 bg-slate-800/60 checked:bg-indigo-500 checked:border-indigo-500 cursor-pointer transition"> Sinkronkan otomatis saat halaman dibuka
+        </label>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <label class="flex items-start gap-2.5 cursor-pointer select-none rounded-xl border border-white/10 bg-white/[0.03] px-3.5 py-3 transition has-[:checked]:border-indigo-500/60 has-[:checked]:bg-indigo-500/10">
+            <input type="radio" name="mode" value="sintesis" checked class="appearance-none shrink-0 w-4 h-4 mt-0.5 rounded-full border-2 border-slate-600 bg-slate-800/60 checked:bg-indigo-500 checked:border-indigo-500 cursor-pointer transition">
+            <span class="leading-snug"><span class="block text-sm font-bold text-slate-200">Sintesis (cepat)</span><span class="block text-[11px] text-slate-500">Jalan nyata + kelurahan/kecamatan asli. Bisa offline.</span></span>
+          </label>
+          <label class="flex items-start gap-2.5 cursor-pointer select-none rounded-xl border border-white/10 bg-white/[0.03] px-3.5 py-3 transition has-[:checked]:border-indigo-500/60 has-[:checked]:bg-indigo-500/10">
+            <input type="radio" name="mode" value="presisi" class="appearance-none shrink-0 w-4 h-4 mt-0.5 rounded-full border-2 border-slate-600 bg-slate-800/60 checked:bg-indigo-500 checked:border-indigo-500 cursor-pointer transition">
+            <span class="leading-snug"><span class="block text-sm font-bold text-slate-200">Presisi (online)</span><span class="block text-[11px] text-slate-500">Tempat nyata (POI) sesuai tipe + jalan nyata. Anti-duplikat.</span></span>
+          </label>
+        </div>
+
+        <p id="statusSumberAktif" class="text-[11px] font-semibold text-slate-400"></p>
+
+        <!-- Geoapify panel -->
+        <details id="panelGeoapify" class="group rounded-xl ring-1 ring-sky-500/30 bg-sky-500/[0.04] open:bg-sky-500/[0.06]">
+          <summary class="flex items-center gap-2 cursor-pointer list-none px-3.5 py-2.5 text-xs font-bold text-sky-300 hover:text-sky-200 transition select-none">
+            <img src="https://unpkg.com/lucide-static@1.44.0/icons/key.svg" alt="" class="w-3.5 h-3.5 invert opacity-70" onerror="this.style.display='none';">
+            <span class="flex-1">Geoapify API — (disarankan)</span>
+            <img src="https://unpkg.com/lucide-static@1.44.0/icons/chevron-down.svg" alt="" class="w-3.5 h-3.5 invert opacity-60 transition group-open:rotate-180" onerror="this.style.display='none';">
+          </summary>
+          <div class="px-3.5 pb-4 space-y-3 border-t border-white/5 pt-3">
+            <div class="flex items-center justify-between gap-2">
+              <p class="text-[11px] leading-relaxed text-slate-500">Daftar gratis di <b class="text-sky-300">myprojects.geoapify.com</b>.</p>
+              <button type="button" id="btnGunakanTersedia" title="Aktifkan / nonaktifkan key tersedia"
+                      class="shrink-0 inline-flex items-center gap-1 text-[11px] font-semibold text-indigo-300 bg-indigo-500/15 ring-1 ring-indigo-500/30 rounded-full px-2.5 py-1 hover:bg-indigo-500/25 transition disabled:opacity-50 disabled:cursor-not-allowed">
+                Gunakan key tersedia
+              </button>
+            </div>
+            <div class="relative">
+              <input type="password" id="inputKeyGeoapify" placeholder="Tempel Geoapify API key" autocomplete="off"
+                     class="w-full rounded-xl border border-white/10 bg-white/[0.04] px-3.5 py-2.5 pr-11 text-sm text-slate-100 placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-sky-500/50 transition">
+              <button type="button" id="btnTampilkanGeo" title="Tampilkan / sembunyikan key"
+                      class="absolute right-2 top-1/2 -translate-y-1/2 inline-flex items-center justify-center w-7 h-7 rounded-lg hover:bg-white/10 transition">
+                <img id="ikonMataGeo" src="https://unpkg.com/lucide-static@1.44.0/icons/eye.svg" alt="" class="w-4 h-4 invert opacity-70">
+              </button>
+            </div>
+            <div class="flex flex-wrap items-center gap-2">
+              <button type="button" id="btnSimpanKeyGeo" class="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-300 bg-emerald-500/10 ring-1 ring-emerald-500/30 rounded-lg px-3 py-1.5 hover:bg-emerald-500/20 transition">Simpan Key</button>
+              <button type="button" id="btnTesKeyGeo" class="inline-flex items-center gap-1.5 text-xs font-bold text-sky-300 bg-sky-500/15 ring-1 ring-sky-500/30 rounded-lg px-3 py-1.5 hover:bg-sky-500/25 transition disabled:opacity-50 disabled:cursor-not-allowed">Tes Key</button>
+              <button type="button" id="btnHapusKeyGeo" class="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-400 ring-1 ring-white/10 rounded-lg px-3 py-1.5 hover:text-rose-400 hover:ring-rose-500/40 transition">Hapus Key</button>
+              <span id="statusKeyGeo" class="text-[11px] text-slate-500"></span>
+            </div>
+            <p id="keyTersimpanGeo" class="text-[11px] font-mono break-all text-slate-500"></p>
+          </div>
+        </details>
+
+        <!-- Google panel -->
+        <details id="panelGoogle" class="group rounded-xl ring-1 ring-white/10 bg-white/[0.02]">
+          <summary class="flex items-center gap-2 cursor-pointer list-none px-3.5 py-2.5 text-xs font-bold text-slate-400 hover:text-indigo-300 transition select-none">
+            <img src="https://unpkg.com/lucide-static@1.44.0/icons/map-pin.svg" alt="" class="w-3.5 h-3.5 invert opacity-70" onerror="this.style.display='none';">
+            <span class="flex-1">Google Maps API (opsional)</span>
+            <img src="https://unpkg.com/lucide-static@1.44.0/icons/chevron-down.svg" alt="" class="w-3.5 h-3.5 invert opacity-60 transition group-open:rotate-180" onerror="this.style.display='none';">
+          </summary>
+          <div class="px-3.5 pb-4 space-y-3 border-t border-white/5 pt-3">
+            <p class="text-[11px] leading-relaxed text-slate-500">Daftar &amp; aktifkan Geocoding API di console.cloud.google.com.</p>
+            <div class="relative">
+              <input type="password" id="inputKeyGoogle" placeholder="Tempel Google Geocoding API key (AIza…)" autocomplete="off" class="w-full rounded-xl border border-white/10 bg-white/[0.04] px-3.5 py-2.5 pr-11 text-sm text-slate-100 placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition">
+              <button type="button" id="btnTampilkanGoogle" title="Tampilkan / sembunyikan key" class="absolute right-2 top-1/2 -translate-y-1/2 inline-flex items-center justify-center w-7 h-7 rounded-lg hover:bg-white/10 transition">
+                <img id="ikonMataGoogle" src="https://unpkg.com/lucide-static@1.44.0/icons/eye.svg" alt="" class="w-4 h-4 invert opacity-70">
+              </button>
+            </div>
+            <div class="flex flex-wrap items-center gap-2">
+              <button type="button" id="btnSimpanKey" class="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-300 bg-emerald-500/10 ring-1 ring-emerald-500/30 rounded-lg px-3 py-1.5 hover:bg-emerald-500/20 transition">Simpan Key</button>
+              <button type="button" id="btnTesKey" class="inline-flex items-center gap-1.5 text-xs font-bold text-indigo-300 bg-indigo-500/15 ring-1 ring-indigo-500/30 rounded-lg px-3 py-1.5 hover:bg-indigo-500/25 transition disabled:opacity-50 disabled:cursor-not-allowed">Tes Key</button>
+              <button type="button" id="btnHapusKey" class="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-400 ring-1 ring-white/10 rounded-lg px-3 py-1.5 hover:text-rose-400 hover:ring-rose-500/40 transition">Hapus Key</button>
+              <span id="statusKey" class="text-[11px] text-slate-500"></span>
+            </div>
+            <p id="keyTersimpanGoogle" class="text-[11px] font-mono break-all text-slate-500"></p>
+          </div>
+        </details>
+      </fieldset>
+
+      <div>
+        <div class="flex items-center justify-between gap-3 mb-2">
+          <label for="inputNama" class="block text-sm font-semibold text-slate-300">Nama Penerima <span class="text-slate-500 font-normal">(satu nama per baris)</span></label>
+          <button type="button" id="btnBersihkanNama" class="inline-flex items-center gap-1.5 shrink-0 text-xs font-semibold text-slate-500 hover:text-rose-400 transition"><img src="https://unpkg.com/lucide-static@1.44.0/icons/eraser.svg" alt="" class="w-3.5 h-3.5 invert opacity-70" onerror="this.style.display='none';"><span>Bersihkan</span></button>
+        </div>
+        <textarea id="inputNama" rows="8" spellcheck="false" class="w-full rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-3 text-sm text-slate-100 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/60 focus:border-indigo-500/50 transition resize-y">Mas KheNzon
+Bang KheNzon
+Abang KheNzon
+Kak KheNzon
+Kakak KheNzon
+Kang KheNzon
+Bli KheNzon
+Bung KheNzon
+Cak KheNzon
+Gus KheNzon
+Ujang KheNzon
+Bro KheNzon
+Boss KheNzon
+Gan KheNzon
+Komandan KheNzon
+Mayor KheNzon
+Sultan KheNzon
+Chief KheNzon
+Captain KheNzon
+Kapten KheNzon
+Rmh KheNzon
+King KheNzon
+Bos KheNzon
+Om KheNzon
+Kaka KheNzon
+Mang KheNzon
+Ibu KheNzon
+Mamah KheNzon
+Ibu aa.KheNzon
+Tuan KheNzon
+KheNzon bos
+Juragan KheNzon
+Raja KheNzon
+Dewa KheNzon
+KheNzon boskie
+Pak KheNzon
+Jawara KheNzon
+KheNzon Slow
+KheNzon Bosku
+KheNzon Ngeri
+KheNzon Ceo
+KheNzon Bigbosss
+KheNzon Rajanya
+KheNzon Musk
+KheNzon Brayy
+KheNzon Man
+KheNzon Cak</textarea>
+      </div>
+
+      <div>
+        <div class="flex items-center justify-between gap-3 mb-2">
+          <label for="inputPatokan" class="block text-sm font-semibold text-slate-300">Patokan <span class="text-slate-500 font-normal">(satu patokan per baris)</span></label>
+          <button type="button" id="btnBersihkanPatokan" class="inline-flex items-center gap-1.5 shrink-0 text-xs font-semibold text-slate-500 hover:text-rose-400 transition"><img src="https://unpkg.com/lucide-static@1.44.0/icons/eraser.svg" alt="" class="w-3.5 h-3.5 invert opacity-70" onerror="this.style.display='none';"><span>Bersihkan</span></button>
+        </div>
+        <textarea id="inputPatokan" rows="6" spellcheck="false" class="w-full rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-3 text-sm text-slate-100 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/60 focus:border-indigo-500/50 transition resize-y">belakang nasi uduk
+pandawa
+belakang pom
+rumah oren
+pager hitam
+gang di bawah pohon
+rumah di gang
+didalam pandawa
+pandawa no 25
+rumah lantai 2
+rumah pager hitam</textarea>
+      </div>
+
+      <fieldset>
+        <legend class="block text-sm font-semibold text-slate-300 mb-2">Tipe Alamat <span class="text-slate-500 font-normal">(kosong = semua; di Presisi dipakai untuk memfilter kategori POI)</span></legend>
+        <div id="tipeOptions" class="grid grid-cols-2 sm:grid-cols-4 gap-2"></div>
+      </fieldset>
+
+      <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-1">
+        <label class="flex items-center gap-2.5 text-sm font-medium text-slate-400">
+          Jumlah
+          <input type="number" id="inputJumlah" min="1" max="100000" step="1" value="5" inputmode="numeric" class="w-24 rounded-xl border border-white/10 bg-white/[0.06] px-3 py-2 text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500/60 transition [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none">
+        </label>
+        <button type="submit" id="btnGenerate" class="flex-1 inline-flex items-center justify-center gap-2 bg-gradient-to-r from-indigo-500 to-fuchsia-500 hover:from-indigo-400 hover:to-fuchsia-400 active:scale-[0.98] text-white font-bold text-sm px-5 py-3 rounded-2xl shadow-lg shadow-indigo-500/30 transition focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-[#0b0f1a] focus:ring-indigo-400 disabled:opacity-60 disabled:cursor-not-allowed">
+          <img src="https://unpkg.com/lucide-static@1.44.0/icons/dices.svg" alt="" class="w-4 h-4 invert" onerror="this.style.display='none';"> <span id="teksBtnGenerate">Generate Alamat</span>
+        </button>
+      </div>
+
+      <p id="progresHasil" class="hidden text-xs font-semibold text-indigo-300 bg-indigo-500/10 ring-1 ring-indigo-500/25 rounded-xl px-4 py-3"></p>
+
+      <div class="flex justify-center pt-1">
+        <button type="button" id="btnResetDefault" class="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-400 hover:text-indigo-300 ring-1 ring-white/10 hover:ring-indigo-500/40 bg-white/[0.03] hover:bg-white/[0.06] rounded-lg px-3.5 py-2 transition">
+          <img src="https://unpkg.com/lucide-static@1.44.0/icons/rotate-ccw.svg" alt="" class="w-3.5 h-3.5 invert opacity-70" onerror="this.style.display='none';"> <span>Reset ke Data Default</span>
+        </button>
+      </div>
+
+      <p id="errorMsg" class="hidden text-sm font-medium text-rose-400 bg-rose-500/10 ring-1 ring-rose-500/20 rounded-xl px-4 py-3"></p>
+    </form>
+
+    <section id="hasilSection" class="mt-8 hidden" aria-live="polite">
+      <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+        <h2 class="flex items-center gap-2.5 text-sm font-bold uppercase tracking-widest text-slate-400">Hasil Generate <span id="jumlahPill" class="hidden text-[11px] font-black text-indigo-300 bg-indigo-500/15 ring-1 ring-indigo-500/30 rounded-full px-2.5 py-0.5"></span></h2>
+        <div class="flex items-center gap-2">
+          <button type="button" id="btnSalinSemua" class="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-400 hover:text-indigo-300 ring-1 ring-white/10 hover:ring-indigo-500/40 bg-white/[0.03] hover:bg-white/[0.06] rounded-lg px-3 py-1.5 transition"><img src="https://unpkg.com/lucide-static@1.44.0/icons/copy.svg" alt="" class="w-3.5 h-3.5 invert opacity-80" onerror="this.style.display='none';"><span class="label">Salin Semua</span></button>
+          <button type="button" id="btnUnduh" class="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-400 hover:text-indigo-300 ring-1 ring-white/10 hover:ring-indigo-500/40 bg-white/[0.03] hover:bg-white/[0.06] rounded-lg px-3 py-1.5 transition"><img src="https://unpkg.com/lucide-static@1.44.0/icons/download.svg" alt="" class="w-3.5 h-3.5 invert opacity-80" onerror="this.style.display='none';"><span class="label">Unduh .txt</span></button>
+          <button type="button" id="btnBersihkanHasil" class="inline-flex items-center gap-1.5 text-xs font-medium text-slate-500 hover:text-rose-400 transition"><img src="https://unpkg.com/lucide-static@1.44.0/icons/trash-2.svg" alt="" class="w-3.5 h-3.5 invert opacity-70" onerror="this.style.display='none';"><span>Bersihkan Hasil</span></button>
+        </div>
+      </div>
+      <ul id="daftarAlamat" class="space-y-3"></ul>
+    </section>
+
+    <footer class="mt-12 text-center text-xs text-slate-500 leading-relaxed">
+      <p>RYS Tools · sumber: Geoapify · OpenStreetMap · Google Maps API (opsional).</p>
+      <p class="mt-1 text-slate-600">Setiap alamat adalah awal dari sebuah cerita.</p>
+    </footer>
+  </main>
+
+  <script>
+    /* =====================================================================
+       RYS TOOLS v25
+       - Tombol "Tokopedia" per hasil: salin (format sama seperti Salin biasa)
+         lalu buka halaman Tambah Alamat Tokopedia di tab baru.
+       - Tombol Salin & Tokopedia diletakkan di baris aksi BAWAH alamat
+         (sebaris dengan badge sumber & link Google Maps) agar tidak
+         bertabrakan dengan teks alamat.
+       - DATA_DEFAULT_NAMA disamakan dengan isi awal textarea (47 baris)
+         sehingga Reset ke Data Default konsisten.
+       - FIX: hilangkan kurung ekstra di geocodeGoogle (menyebabkan
+         SyntaxError dan mematikan seluruh JS).
+       ===================================================================== */
+
+    const KEYS_GEOPIFY_DEFAULT = [
+      'f583a21ddfc94c699cd6bc73d4e136ff',
+      'bcc0dec9988642e89e3478574ceecb21'
+    ];
+    function isKeyTersedia(key){
+      return KEYS_GEOPIFY_DEFAULT.some(k=>k===key);
+    }
+
+    const rand=(a,b)=>Math.floor(Math.random()*(b-a+1))+a;
+    const pick=arr=>arr[Math.floor(Math.random()*arr.length)];
+    const pad2=n=>String(n).padStart(2,'0');
+    const hurufBlok=()=>pick('ABCDEFGHJKLMNPQRST');
+    const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+    const uniq=a=>[...new Set(a.map(s=>(s||'').trim()).filter(Boolean))];
+    const parseList=str=>str.split('\n').map(s=>s.trim()).filter(Boolean);
+    const bersihkanJalan=n=>n.replace(/^Jalan\s+/i,'').replace(/^Jl\.?\s*/i,'').replace(/^Jln\.?\s*/i,'').replace(/^Jln\s+/i,'').trim();
+
+    async function fetchJSON(url,ms=12000,opts={}){const c=new AbortController();const t=setTimeout(()=>c.abort(),ms);try{const r=await fetch(url,{signal:c.signal,headers:{Accept:'application/json'},...opts});if(!r.ok)throw new Error('HTTP '+r.status);return await r.json();}finally{clearTimeout(t);}}
+    function jsonp(url){return new Promise((res,rej)=>{const cb='rys_cb_'+Math.floor(Math.random()*1e9);window[cb]=d=>{delete window[cb];const s=document.getElementById('jsonp_script');if(s)s.remove();res(d);};const s=document.createElement('script');s.id='jsonp_script';s.src=url+'&callback='+cb;s.onerror=()=>{delete window[cb];if(s.parentNode)s.parentNode.removeChild(s);rej(new Error('Gagal memuat skrip'));};document.body.appendChild(s);});}
+
+    const GLOBAL_JALAN=['Jend. Sudirman','M.H. Thamrin','Jend. Gatot Subroto','H.R. Rasuna Said','Jend. A. Yani','Diponegoro','Imam Bonjol','Teuku Umar','Gajah Mada','Hayam Wuruk','Ahmad Yani','Pahlawan','Juanda','Cempaka','Flamboyan','Kenanga','Melati','Anggrek','Bougenville','Begonia','Perjuangan','Pemuda'];
+    const GANG=['Melati','Mawar','Kenanga','Flamboyan','Cempaka','Bougenville','Anggrek','Teratai','Kamboja','Seroja','Dahlia','Tulip','Beringin','Wijaya','Bahagia','Permai','Damai','Sentosa','Harapan','Ampera'];
+    const PERUM=['Indah','Asri','Sejahtera','Permai','Citra','Kencana','Mutiara','Sari','Pesona','Bukit','Cendana','Melati','Mahoni','Cemara','Pinus','Garden','Harmoni','Lestari','Senja','Wijaya'];
+    const KOMPLEK=['Begonia','Mawar','Cempaka','Flamboyan','Anggrek','Kenanga','Bougenville','Teratai','Kamboja','Melati','Dahlia','Seroja','Puspa','Mandiri','Nusantara','Jakarta','Mas','Ruko','Pergudangan','Sentra Bisnis','Perkantoran'];
+    const CLUSTER=['Harmoni','Kenanga','Dahlia','Puspa','Kencana','Lestari','Senja','Mutiara','Seroja','Wijaya','Emerald','Sapphire','Ruby','Jade','California','Newton','Orchid','Magnolia','Camellia','Aster'];
+    const GRIYA=['Cendana','Melati','Mahoni','Cemara','Pinus','Jamrud','Safir','Zamrud','Intan','Berlian','Permata','Asri','Persada','Lestari','Prima','Utama','Madani','Mutiara'];
+    const PURI=['Anyar','Kedaton','Mas','Taman','Ayu','Kencana','Mutiara','Dalem','Agung','Luhur','Sari','Indah','Permai','Asri','Saraswati','Segara','Cendana','Melati'];
+    const VILLA=['Bukit','Permai','Indah','Sejuk','Asri','Pesona','Bahari','Cendana','Gunung','Pantai','Pinus','Batu','Lembang','Ubud','Sendang','Nirmala','Damai','Sejahtera'];
+
+    const K=(kota,nama,kp,kel)=>({kota,nama,kp:kp||null,kelurahan:kel||[]});
+
+    const CITIES=[
+      {id:'jakarta',nama:'Jakarta',provinsi:'DKI Jakarta',pusat:[-6.1754,106.8272],radiusM:16000,
+        jalan:['Jend. Sudirman','M.H. Thamrin','Jend. Gatot Subroto','H.R. Rasuna Said','Jend. A. Yani','Diponegoro','Imam Bonjol','Teuku Umar','Cut Meutia','H.O.S. Cokroaminoto','K.H. Mas Mansyur','K.H. Wahid Hasyim','Gajah Mada','Hayam Wuruk','Pintu Besar Selatan','Mangga Besar','Gunung Sahari','Pramuka','Rawamangun','Hasanuddin','Senopati','Wolter Monginsidi','Fatmawati','Kemang Raya','Bangka Raya','Ciputat Raya','Duren Tiga','Kalibata','Dewi Sartika','Otista Raya','Matraman Raya','Salemba Raya','Kramat Raya','Cikini Raya','Menteng Raya','Proklamasi','Daan Mogot'],
+        kecamatan:[K('Kota Jakarta Selatan','Kebayoran Baru','12110',['Gandaria Utara','Cipete Utara','Gunung','Kramat Pela','Melawai','Pulo','Rawa Barat','Selong','Senayan']),K('Kota Jakarta Selatan','Kebayoran Lama','12220',['Cipulir','Grogol Selatan','Grogol Utara','Kebayoran Lama Selatan','Kebayoran Lama Utara','Pondok Pinang']),K('Kota Jakarta Selatan','Pesanggrahan','12310',['Bintaro','Pesanggrahan','Petukangan Selatan','Petukangan Utara','Ulujami']),K('Kota Jakarta Selatan','Cilandak','12410',['Cilandak Barat','Cilandak Timur','Gandaria Selatan','Lebak Bulus','Pondok Labu']),K('Kota Jakarta Selatan','Pasar Minggu','12510',['Cilandak','Jati Padang','Kebagusan','Pasar Minggu','Pejaten Barat','Pejaten Timur','Ragunan']),K('Kota Jakarta Selatan','Jagakarsa','12610',['Ciganjur','Cipedak','Jagakarsa','Lenteng Agung','Srengseng Sawah','Tanjung Barat']),K('Kota Jakarta Selatan','Mampang Prapatan','12710',['Bangka','Kuningan Barat','Mampang Prapatan','Pela Mampang','Tegal Parang']),K('Kota Jakarta Selatan','Pancoran','12770',['Cikoko','Duren Tiga','Kalibata','Pancoran','Pengadegan','Rawajati']),K('Kota Jakarta Selatan','Tebet','12810',['Bukit Duri','Kebon Baru','Manggarai','Manggarai Selatan','Tebet Barat','Tebet Timur']),K('Kota Jakarta Selatan','Setiabudi','12910',['Guntur','Karet','Karet Kuningan','Karet Semanggi','Kuningan Timur','Menteng Atas','Pasar Manggis','Setiabudi']),K('Kota Jakarta Timur','Matraman','13110',['Kebon Manggis','Palmeriam','Pisangan Baru','Utan Kayu Selatan','Utan Kayu Utara']),K('Kota Jakarta Timur','Pulogadung','13210',['Cipinang','Jatinegara Kaum','Kayu Putih','Pisangan Timur','Pulogadung','Rawamangun','Susukan']),K('Kota Jakarta Timur','Jatinegara','13310',['Bali Mester','Bidara Cina','Cipinang Besar Selatan','Cipinang Besar Utara','Cipinang Cempedak','Cipinang Muara','Kampung Melayu','Rawa Bunga']),K('Kota Jakarta Timur','Duren Sawit','13410',['Duren Sawit','Klender','Malaka Jaya','Malaka Sari','Pondok Bambu','Pondok Kelapa']),K('Kota Jakarta Timur','Kramat Jati','13510',['Balekambang','Batu Ampar','Cawang','Cililitan','Dukuh','Kramat Jati','Tengah']),K('Kota Jakarta Timur','Makasar','13610',['Cipinang Melayu','Halim Perdanakusuma','Kebon Pala','Makasar','Pinang Ranti']),K('Kota Jakarta Timur','Pasar Rebo','13710',['Baru','Cijantung','Gedong','Kalisari','Pekayon']),K('Kota Jakarta Timur','Ciracas','13720',['Cibubur','Ciracas','Kelapa Dua Wetan','Rambutan','Susukan']),K('Kota Jakarta Timur','Cipayung','13810',['Ceger','Cipayung','Lubang Buaya','Munjul','Pondok Ranggon','Setu']),K('Kota Jakarta Timur','Cakung','13910',['Cakung Barat','Cakung Timur','Penggilingan','Rawa Terate','Ujung Menteng']),K('Kota Jakarta Pusat','Gambir','10110',['Cideng','Duri Pulo','Gambir','Kebon Kelapa','Petojo Utara']),K('Kota Jakarta Pusat','Tanah Abang','10210',['Bendungan Hilir','Karet Tengsin','Kebon Kacang','Kebon Melati','Petojo Selatan']),K('Kota Jakarta Pusat','Menteng','10310',['Cikini','Gondangdia','Kebon Sirih','Menteng','Pegangsaan']),K('Kota Jakarta Pusat','Senen','10410',['Bungur','Kenari','Kramat','Kwitang','Paseban','Senen']),K('Kota Jakarta Pusat','Cempaka Putih','10510',['Cempaka Putih Barat','Cempaka Putih Timur','Rawasari']),K('Kota Jakarta Pusat','Johar Baru','10530',['Galur','Johar Baru','Kampung Rawa','Tanah Tinggi']),K('Kota Jakarta Pusat','Kemayoran','10610',['Cempaka Baru','Gunung Sahari Selatan','Harapan Mulya','Kebon Kosong','Kemayoran','Sumur Batu','Utan Panjang']),K('Kota Jakarta Pusat','Sawah Besar','10710',['Gunung Sahari Utara','Karang Anyar','Kartini','Mangga Dua Selatan','Pasar Baru']),K('Kota Jakarta Barat','Taman Sari','11110',['Glodok','Keagungan','Krukut','Mangga Besar','Maphar','Pinangsia','Taman Sari','Tangki']),K('Kota Jakarta Barat','Tambora','11310',['Angke','Duri Selatan','Duri Utara','Jembatan Besi','Jembatan Lima','Kali Anyar','Krendang','Pekojan','Roa Malaka','Tambora','Tanah Sereal']),K('Kota Jakarta Barat','Grogol Petamburan','11450',['Grogol','Jelambar','Jelambar Baru','Tanjung Duren Selatan','Tanjung Duren Utara','Tomang','Wijaya Kusuma']),K('Kota Jakarta Barat','Palmerah','11480',['Jati Pulo','Kemanggisan','Kota Bambu Selatan','Kota Bambu Utara','Palmerah','Slipi']),K('Kota Jakarta Barat','Kebon Jeruk','11530',['Duri Kepa','Kebon Jeruk','Kedoya Selatan','Kedoya Utara','Kelapa Dua','Sukabumi Selatan','Sukabumi Utara']),K('Kota Jakarta Barat','Kembangan','11610',['Kembangan Selatan','Kembangan Utara','Meruya Selatan','Meruya Utara','Srengseng']),K('Kota Jakarta Barat','Cengkareng','11730',['Cengkareng Barat','Cengkareng Timur','Duri Kosambi','Kapuk','Kedaung Kali Angke','Rawa Buaya']),K('Kota Jakarta Barat','Kalideres','11830',['Kamal','Kalideres','Pegadungan','Semanan','Tegal Alur']),K('Kota Jakarta Utara','Penjaringan','14440',['Kamal Muara','Kapuk Muara','Pejagalan','Penjaringan','Pluit']),K('Kota Jakarta Utara','Pademangan','14410',['Ancol','Budi Mulia','Pademangan Barat','Pademangan Timur']),K('Kota Jakarta Utara','Tanjung Priok','14310',['Kebon Bawang','Papanggo','Sungai Bambu','Sunter Agung','Sunter Jaya','Tanjung Priok','Warakas']),K('Kota Jakarta Utara','Koja','14210',['Koja','Lagoa','Rawa Badak Selatan','Rawa Badak Utara','Tugu Selatan','Tugu Utara']),K('Kota Jakarta Utara','Kelapa Gading','14240',['Kelapa Gading Barat','Kelapa Gading Timur','Pegangsaan Dua']),K('Kota Jakarta Utara','Cilincing','14120',['Cilincing','Kali Baru','Marunda','Rorotan','Semper Barat','Semper Timur','Sukapura'])]},
+      {id:'bandung',nama:'Bandung',provinsi:'Jawa Barat',pusat:[-6.9175,107.6191],radiusM:10000,
+        jalan:['Asia Afrika','Braga','Merdeka','Ir. H. Juanda','Setiabudi','L.L.R.E. Martadinata','Ahmad Yani','Pasteur','Cihampelas','Dr. Otten','Sukajadi','Sumatera','Jawa','Lombok','Citarum','Surapati','Dipatiukur','Moh. Toha','Soekarno-Hatta','Gatot Subroto'],
+        kecamatan:[K('Kota Bandung','Bandung Wetan',null,['Citarum','Tamansari','Braga']),K('Kota Bandung','Coblong'),K('Kota Bandung','Cibeunying Kidul'),K('Kota Bandung','Cibeunying Kaler'),K('Kota Bandung','Sumur Bandung'),K('Kota Bandung','Lengkong'),K('Kota Bandung','Regol'),K('Kota Bandung','Cicendo'),K('Kota Bandung','Andir'),K('Kota Bandung','Astanaanyar'),K('Kota Bandung','Batununggal'),K('Kota Bandung','Buahbatu'),K('Kota Bandung','Kiaracondong'),K('Kota Bandung','Babakan Ciparay'),K('Kota Bandung','Sukasari'),K('Kota Bandung','Sukajadi'),K('Kota Bandung','Cidadap'),K('Kota Bandung','Antapani'),K('Kota Bandung','Arcamanik'),K('Kota Bandung','Rancasari'),K('Kota Bandung','Gedebage'),K('Kota Bandung','Ujungberung'),K('Kota Bandung','Panyileukan'),K('Kota Bandung','Cinambo'),K('Kota Bandung','Mandalajati'),K('Kota Bandung','Bojongloa Kaler'),K('Kota Bandung','Bojongloa Kidul'),K('Kota Bandung','Bandung Kidul'),K('Kota Bandung','Margacinta')]},
+      {id:'surabaya',nama:'Surabaya',provinsi:'Jawa Timur',pusat:[-7.2575,112.7521],radiusM:12000,
+        jalan:['Jend. Ahmad Yani','Dharmahusada','Kertajaya','Mayjen. Sungkono','Diponegoro','Embong Malang','Basuki Rahmat','Pemuda','Kayoon','Raya Darmo','Kupang','Margorejo','Raya Manyar','Ngagel','Rungkut Madya','Kapten Tendean','Perak','Rajawali','Bubutan','Pahlawan','Untung Surapati','Airlangga','Gubernur Suryo'],
+        kecamatan:[K('Kota Surabaya','Genteng'),K('Kota Surabaya','Tegalsari'),K('Kota Surabaya','Bubutan'),K('Kota Surabaya','Simokerto'),K('Kota Surabaya','Pabean Cantian'),K('Kota Surabaya','Semampir'),K('Kota Surabaya','Krembangan'),K('Kota Surabaya','Tambaksari'),K('Kota Surabaya','Gubeng'),K('Kota Surabaya','Wonokromo'),K('Kota Surabaya','Wonocolo'),K('Kota Surabaya','Karangpilang'),K('Kota Surabaya','Jambangan'),K('Kota Surabaya','Gayungan'),K('Kota Surabaya','Wiyung'),K('Kota Surabaya','Dukuhpakis'),K('Kota Surabaya','Rungkut'),K('Kota Surabaya','Tenggilis Mejoyo'),K('Kota Surabaya','Gunung Anyar'),K('Kota Surabaya','Sukolilo'),K('Kota Surabaya','Kenjeran'),K('Kota Surabaya','Bulak'),K('Kota Surabaya','Mulyorejo'),K('Kota Surabaya','Sawahan'),K('Kota Surabaya','Sukomanunggal'),K('Kota Surabaya','Tandes'),K('Kota Surabaya','Asemrowo'),K('Kota Surabaya','Benowo'),K('Kota Surabaya','Pakal'),K('Kota Surabaya','Sambikerep'),K('Kota Surabaya','Lakarsantri')]},
+      {id:'semarang',nama:'Semarang',provinsi:'Jawa Tengah',pusat:[-6.9667,110.4167],radiusM:10000,
+        jalan:['Pemuda','Pandanaran','Jend. Soedirman','Jend. Ahmad Yani','Diponegoro','Imam Bonjol','Sultan Agung','MT Haryono','Gajahmada','Raya Kaligawe','Siliwangi','Pahlawan','Kawi','Ki Mangunsarkoro','Teuku Umar','Puspogiwang'],
+        kecamatan:[K('Kota Semarang','Semarang Tengah'),K('Kota Semarang','Semarang Utara'),K('Kota Semarang','Semarang Timur'),K('Kota Semarang','Semarang Selatan'),K('Kota Semarang','Semarang Barat'),K('Kota Semarang','Gayamsari'),K('Kota Semarang','Genuk'),K('Kota Semarang','Pedurungan'),K('Kota Semarang','Tembalang'),K('Kota Semarang','Banyumanik'),K('Kota Semarang','Gunungpati'),K('Kota Semarang','Mijen'),K('Kota Semarang','Ngaliyan'),K('Kota Semarang','Tugu'),K('Kota Semarang','Gajahmungkur'),K('Kota Semarang','Candisari')]},
+      {id:'yogyakarta',nama:'Yogyakarta',provinsi:'DI Yogyakarta',pusat:[-7.7956,110.3695],radiusM:7000,
+        jalan:['Malioboro','Mangkubumi','A. Yani','Diponegoro','Pangeran Senopati','Urip Sumoharjo','Jend. Sudirman','Godean','Kaliurang','Solo','Parangtritis','Bantul','Magelang','Cik Di Tiro','Gejayan','Colombo','Sumberan','Ringroad Utara'],
+        kecamatan:[K('Kota Yogyakarta','Danurejan'),K('Kota Yogyakarta','Gedongtengen'),K('Kota Yogyakarta','Gondokusuman'),K('Kota Yogyakarta','Gondomanan'),K('Kota Yogyakarta','Jetis'),K('Kota Yogyakarta','Kotagede'),K('Kota Yogyakarta','Kraton'),K('Kota Yogyakarta','Mantrijeron'),K('Kota Yogyakarta','Mergangsan'),K('Kota Yogyakarta','Ngampilan'),K('Kota Yogyakarta','Pakualaman'),K('Kota Yogyakarta','Tegalrejo'),K('Kota Yogyakarta','Umbulharjo'),K('Kota Yogyakarta','Wirobrajan')]},
+      {id:'medan',nama:'Medan',provinsi:'Sumatera Utara',pusat:[3.5952,98.6722],radiusM:9000,
+        jalan:['Imam Bonjol','Jend. Sudirman','Gatot Subroto','Iskandar Muda','Sisingamangaraja','S.M. Raja','K.H. Wahid Hasyim','Cut Nyak Dien','Zainul Arifin','Diponegoro','Teuku Cik Ditiro','Ahmad Yani','Brigjen Katamso','Perintis Kemerdekaan'],
+        kecamatan:[K('Kota Medan','Medan Petisah'),K('Kota Medan','Medan Baru'),K('Kota Medan','Medan Polonia'),K('Kota Medan','Medan Maimun'),K('Kota Medan','Medan Kota'),K('Kota Medan','Medan Area'),K('Kota Medan','Medan Denai'),K('Kota Medan','Medan Amplas'),K('Kota Medan','Medan Johor'),K('Kota Medan','Medan Marelan'),K('Kota Medan','Medan Belawan'),K('Kota Medan','Medan Labuhan'),K('Kota Medan','Medan Deli'),K('Kota Medan','Medan Tuntungan'),K('Kota Medan','Medan Selayang'),K('Kota Medan','Medan Sunggal'),K('Kota Medan','Medan Helvetia'),K('Kota Medan','Medan Barat'),K('Kota Medan','Medan Timur'),K('Kota Medan','Medan Perjuangan'),K('Kota Medan','Medan Tembung')]},
+      {id:'makassar',nama:'Makassar',provinsi:'Sulawesi Selatan',pusat:[-5.1477,119.4327],radiusM:9000,
+        jalan:['Jend. Sudirman','Ahmad Yani','Sultan Hasanuddin','Urip Sumoharjo','Perintis Kemerdekaan','A.P. Pettarani','M. Yamin','Veteran','Boulevard','Metro Tanjung Bunga','Somba Opu','Pengayoman','Andalas'],
+        kecamatan:[K('Kota Makassar','Mariso'),K('Kota Makassar','Mamajang'),K('Kota Makassar','Tamalate'),K('Kota Makassar','Rappocini'),K('Kota Makassar','Makassar'),K('Kota Makassar','Ujung Pandang'),K('Kota Makassar','Wajo'),K('Kota Makassar','Bontoala'),K('Kota Makassar','Ujung Tanah'),K('Kota Makassar','Tallo'),K('Kota Makassar','Panakkukang'),K('Kota Makassar','Manggala'),K('Kota Makassar','Biringkanaya'),K('Kota Makassar','Tamalanrea')]},
+      {id:'denpasar',nama:'Denpasar',provinsi:'Bali',pusat:[-8.6705,115.2126],radiusM:7000,
+        jalan:['Ngurah Rai','Imam Bonjol','Diponegoro','Gajah Mada','Teuku Umar','Hayam Wuruk','Sunset Road','Raya Kuta','Raya Kerobokan','Raya Seminyak','Tukad Pakerisan','Sulawesi','Nangka','Mertasari'],
+        kecamatan:[K('Kota Denpasar','Denpasar Selatan'),K('Kota Denpasar','Denpasar Timur'),K('Kota Denpasar','Denpasar Barat'),K('Kota Denpasar','Denpasar Utara')]},
+      {id:'depok',nama:'Depok',provinsi:'Jawa Barat',pusat:[-6.4025,106.7942],radiusM:8000,
+        jalan:['Margonda Raya','Raya Sawangan','Raya Bogor','Raya Parung','Raya Cinere','Raya Krukut','Raya Muchtar','Tole Iskandar','K.H.M. Usman','Raya Cilodong','Raya Tapos','Raya Sukmajaya','Raya Pancoran Mas','Raya Beji','Raya Limo'],
+        kecamatan:[K('Kota Depok','Beji'),K('Kota Depok','Pancoran Mas'),K('Kota Depok','Cipayung'),K('Kota Depok','Sukmajaya'),K('Kota Depok','Cilodong'),K('Kota Depok','Tapos'),K('Kota Depok','Sawangan'),K('Kota Depok','Limo'),K('Kota Depok','Cinere'),K('Kota Depok','Bojongsari')]},
+      {id:'bogor',nama:'Bogor',provinsi:'Jawa Barat',pusat:[-6.5971,106.8060],radiusM:7000,
+        jalan:['Raya Pajajaran','Jend. Sudirman','Siliwangi','Veteran','Dewi Sartika','Pahlawan','Otto Iskandar di Nata','R.E. Martadinata','Raya Tajur','Raya Puncak','Raya Cibinong','Ir. H. Juanda','Kapten Muslihat'],
+        kecamatan:[K('Kota Bogor','Bogor Selatan'),K('Kota Bogor','Bogor Timur'),K('Kota Bogor','Bogor Utara'),K('Kota Bogor','Bogor Tengah'),K('Kota Bogor','Bogor Barat'),K('Kota Bogor','Tanah Sareal')]},
+      {id:'bekasi',nama:'Bekasi',provinsi:'Jawa Barat',pusat:[-6.2383,106.9756],radiusM:9000,
+        jalan:['Jend. Ahmad Yani','Ir. H. Juanda','Mayor Hasibuan','Raya Kalimalang','Raya Narogong','Raya Cikarang','Raya Bantar Gebang','Chairil Anwar','Veteran','Kartini','H.M. Joyomartono','Raya Kranji','Raya Jatiwaringin'],
+        kecamatan:[K('Kota Bekasi','Bekasi Selatan'),K('Kota Bekasi','Bekasi Timur'),K('Kota Bekasi','Bekasi Utara'),K('Kota Bekasi','Bekasi Barat'),K('Kota Bekasi','Rawalumbu'),K('Kota Bekasi','Mustika Jaya'),K('Kota Bekasi','Medan Satria'),K('Kota Bekasi','Bantargebang'),K('Kota Bekasi','Pondokgede'),K('Kota Bekasi','Jatiasih'),K('Kota Bekasi','Jatisampurna')]},
+      {id:'tangerang',nama:'Tangerang',provinsi:'Banten',pusat:[-6.1783,106.6319],radiusM:9000,
+        jalan:['Jend. Sudirman','Gatot Subroto','Daan Mogot','M.H. Thamrin','Aria Santika','Perintis Kemerdekaan','Raya Serpong','Raya Cisauk','Raya Ciledug','Raya Karawaci','Imam Bonjol','K.S. Tubun','Benteng Betawi','Raya Ciputat'],
+        kecamatan:[K('Kota Tangerang','Tangerang'),K('Kota Tangerang','Ciledug'),K('Kota Tangerang','Larangan'),K('Kota Tangerang','Karawaci'),K('Kota Tangerang','Jatiuwung'),K('Kota Tangerang','Cibodas'),K('Kota Tangerang','Periuk'),K('Kota Tangerang','Batuceper'),K('Kota Tangerang','Cipondoh'),K('Kota Tangerang','Neglasari'),K('Kota Tangerang','Benda'),K('Kota Tangerang','Pinang')]},
+      {id:'surakarta',nama:'Surakarta (Solo)',provinsi:'Jawa Tengah',pusat:[-7.5755,110.8243],radiusM:7000,
+        jalan:['Jend. Sudirman','Jend. A. Yani','Slamet Riyadi','Veteran','Adi Sucipto','Cempaka','Bhayangkara','Monginsidi','Dr. Radjiman','Kapten Mulyadi','Gajah Mada','Ahmad Dahlan','M.T. Haryono'],
+        kecamatan:[K('Kota Surakarta','Laweyan'),K('Kota Surakarta','Serengan'),K('Kota Surakarta','Pasar Kliwon'),K('Kota Surakarta','Jebres'),K('Kota Surakarta','Banjarsari')]},
+      {id:'palembang',nama:'Palembang',provinsi:'Sumatera Selatan',pusat:[-2.9761,104.7754],radiusM:9000,
+        jalan:['Jend. Sudirman','Letjen. H.M. Ryacudu','Kolonel H. Barlian','Rasuna Said','Demang Lebar Daun','Pom IX','A. Yani','Mayor Zen','R. Sukamto','Mayjen. D.I. Panjaitan','Basuki Rahmat','Merdeka'],
+        kecamatan:[K('Kota Palembang','Ilir Barat I'),K('Kota Palembang','Ilir Barat II'),K('Kota Palembang','Ilir Timur I'),K('Kota Palembang','Ilir Timur II'),K('Kota Palembang','Ilir Timur III'),K('Kota Palembang','Seberang Ulu I'),K('Kota Palembang','Seberang Ulu II'),K('Kota Palembang','Alang-Alang Lebar'),K('Kota Palembang','Kertapati'),K('Kota Palembang','Sako'),K('Kota Palembang','Sematang Borang'),K('Kota Palembang','Sukarami'),K('Kota Palembang','Talang Kelapa'),K('Kota Palembang','Plaju')]},
+      {id:'malang',nama:'Malang',provinsi:'Jawa Timur',pusat:[-7.9797,112.6304],radiusM:8000,
+        jalan:['Jend. Basuki Rahmat','Jend. A. Yani','Kawi','Ijen','Bromo','Malioboro','Gajah Mada','Pattimura','Soekarno-Hatta','Mayjen. Sungkono','Laksda Adisucipto','Raya Dieng','Raya Tlogomas'],
+        kecamatan:[K('Kota Malang','Klojen'),K('Kota Malang','Blimbing'),K('Kota Malang','Lowokwaru'),K('Kota Malang','Sukun'),K('Kota Malang','Kedungkandang')]},
+      {id:'padang',nama:'Padang',provinsi:'Sumatera Barat',pusat:[-0.9471,100.4172],radiusM:8000,
+        jalan:['Jend. Sudirman','Khatib Sulaiman','Prof. Dr. Hamka','Gajah Mada','Pemuda','Belakang Olo','Ujung Gurun','By Pass','Adinegoro','Kolonel Batur','Ahmad Yani'],
+        kecamatan:[K('Kota Padang','Padang Barat'),K('Kota Padang','Padang Timur'),K('Kota Padang','Padang Utara'),K('Kota Padang','Padang Selatan'),K('Kota Padang','Lubuk Kilangan'),K('Kota Padang','Lubuk Begalung'),K('Kota Padang','Kuranji'),K('Kota Padang','Pauh'),K('Kota Padang','Koto Tangah'),K('Kota Padang','Bungus Teluk Kabung'),K('Kota Padang','Nanggalo')]},
+      {id:'pekanbaru',nama:'Pekanbaru',provinsi:'Riau',pusat:[0.5071,101.4478],radiusM:8000,
+        jalan:['Jend. Sudirman','Jend. A. Yani','Tuanku Tambusai','Sultan Syarif Kasim','Soekarno-Hatta','Diponegoro','Imam Munandar','HR. Soebrantas','Kartini','Jati','Paus','M. Yamin'],
+        kecamatan:[K('Kota Pekanbaru','Tampan'),K('Kota Pekanbaru','Payung Sekaki'),K('Kota Pekanbaru','Bukit Raya'),K('Kota Pekanbaru','Marpoyan Damai'),K('Kota Pekanbaru','Tenayan Raya'),K('Kota Pekanbaru','Lima Puluh'),K('Kota Pekanbaru','Senapelan'),K('Kota Pekanbaru','Sukajadi'),K('Kota Pekanbaru','Rumbai'),K('Kota Pekanbaru','Rumbai Pesisir'),K('Kota Pekanbaru','Sail'),K('Kota Pekanbaru','Pekanbaru Kota')]},
+      {id:'banjarmasin',nama:'Banjarmasin',provinsi:'Kalimantan Selatan',pusat:[-3.3186,114.5944],radiusM:7000,
+        jalan:['Jend. A. Yani','Ahmad Yani','Sultan Adam','Pangeran Antasari','Lambung Mangkurat','A. Yani Km 2','Brigjend. H. Hasan Basri','Mayjend. S. Parman','Gatot Subroto','Belitung Darat'],
+        kecamatan:[K('Kota Banjarmasin','Banjarmasin Selatan'),K('Kota Banjarmasin','Banjarmasin Timur'),K('Kota Banjarmasin','Banjarmasin Barat'),K('Kota Banjarmasin','Banjarmasin Utara'),K('Kota Banjarmasin','Banjarmasin Tengah')]},
+      {id:'pontianak',nama:'Pontianak',provinsi:'Kalimantan Barat',pusat:[-0.0263,109.3425],radiusM:7000,
+        jalan:['Jend. Sudirman','Gajah Mada','Ahmad Yani','Sultan Abdurrahman','Tanjungpura','Husein Hamzah','Pangeran Natakusuma','Khatulistiwa','Rahadi Oesman'],
+        kecamatan:[K('Kota Pontianak','Pontianak Barat'),K('Kota Pontianak','Pontianak Timur'),K('Kota Pontianak','Pontianak Selatan'),K('Kota Pontianak','Pontianak Utara'),K('Kota Pontianak','Pontianak Kota')]},
+      {id:'manado',nama:'Manado',provinsi:'Sulawesi Utara',pusat:[1.4748,124.8421],radiusM:7000,
+        jalan:['Jend. Sudirman','Piere Tendean','Sam Ratulangi','B.W. Lapian','Kartini','A.A. Maramis','J. A. Supit','R.S. Suprapto','Toar','Palang','Martadinata','Dr. Sutomo'],
+        kecamatan:[K('Kota Manado','Wanea'),K('Kota Manado','Tikala'),K('Kota Manado','Sario'),K('Kota Manado','Malalayang'),K('Kota Manado','Bunaken'),K('Kota Manado','Mapanget'),K('Kota Manado','Singkil'),K('Kota Manado','Tuminting'),K('Kota Manado','Wenang'),K('Kota Manado','Paal Dua')]},
+      {id:'balikpapan',nama:'Balikpapan',provinsi:'Kalimantan Timur',pusat:[-1.2379,116.8529],radiusM:7000,
+        jalan:['Jend. Sudirman','MT Haryono','Ahmad Yani','Syafruddin Prawiranegara','Soekarno-Hatta','Mayjend. Sutoyo','Rapak','Kartini','Marsma Iswahyudi','Yos Sudarso'],
+        kecamatan:[K('Kota Balikpapan','Balikpapan Barat'),K('Kota Balikpapan','Balikpapan Timur'),K('Kota Balikpapan','Balikpapan Selatan'),K('Kota Balikpapan','Balikpapan Utara'),K('Kota Balikpapan','Balikpapan Tengah'),K('Kota Balikpapan','Balikpapan Kota')]},
+      {id:'samarinda',nama:'Samarinda',provinsi:'Kalimantan Timur',pusat:[-0.5022,117.1534],radiusM:7000,
+        jalan:['Jend. Sudirman','Pangeran Antasari','Ahmad Yani','S. Parman','K.H. Wahid Hasyim','D.I. Panjaitan','R.E. Martadinata','Pangeran Diponegoro','Bung Tomo','Teuku Umar'],
+        kecamatan:[K('Kota Samarinda','Samarinda Ulu'),K('Kota Samarinda','Samarinda Ilir'),K('Kota Samarinda','Samarinda Seberang'),K('Kota Samarinda','Loa Janan Ilir'),K('Kota Samarinda','Palaran'),K('Kota Samarinda','Sambutan'),K('Kota Samarinda','Sungai Kunjang'),K('Kota Samarinda','Samarinda Kota'),K('Kota Samarinda','Sungai Pinang'),K('Kota Samarinda','Samarinda Utara')]},
+      {id:'bandarlampung',nama:'Bandar Lampung',provinsi:'Lampung',pusat:[-5.4504,105.2629],radiusM:8000,
+        jalan:['Jend. Sudirman','Z.A. Pagar Alam','Raden Intan','Teuku Umar','Gatot Subroto','Ahmad Yani','Kartini','Pangeran Antasari','Hi. M. Yusuf','Cinde','Soekarno-Hatta'],
+        kecamatan:[K('Kota Bandar Lampung','Teluk Betung Barat'),K('Kota Bandar Lampung','Teluk Betung Selatan'),K('Kota Bandar Lampung','Teluk Betung Timur'),K('Kota Bandar Lampung','Teluk Betung Utara'),K('Kota Bandar Lampung','Panjang'),K('Kota Bandar Lampung','Tanjung Karang Timur'),K('Kota Bandar Lampung','Tanjung Karang Pusat'),K('Kota Bandar Lampung','Tanjung Karang Barat'),K('Kota Bandar Lampung','Kedamaian'),K('Kota Bandar Lampung','Rajabasa'),K('Kota Bandar Lampung','Tanjung Senang'),K('Kota Bandar Lampung','Way Halim'),K('Kota Bandar Lampung','Sukabumi'),K('Kota Bandar Lampung','Kemiling'),K('Kota Bandar Lampung','Langkapura'),K('Kota Bandar Lampung','Enggal'),K('Kota Bandar Lampung','Bumi Waras'),K('Kota Bandar Lampung','Kedaton'),K('Kota Bandar Lampung','Labuhan Ratu'),K('Kota Bandar Lampung','Sumber Rejo')]},
+      {id:'tasikmalaya',nama:'Tasikmalaya',provinsi:'Jawa Barat',pusat:[-7.3268,108.2201],radiusM:6000,
+        jalan:['H. Z. Mustofa','Irine Djuanda','Ahmad Yani','Siliwangi','Tentara Pelajar','Sukarno-Hatta','Cihideung','Yudanegara','Otto Iskandar di Nata'],
+        kecamatan:[K('Kota Tasikmalaya','Cihideung'),K('Kota Tasikmalaya','Tawang'),K('Kota Tasikmalaya','Indihiang'),K('Kota Tasikmalaya','Kawalu'),K('Kota Tasikmalaya','Tamansari'),K('Kota Tasikmalaya','Cibeureum'),K('Kota Tasikmalaya','Purbaratu'),K('Kota Tasikmalaya','Bungursari'),K('Kota Tasikmalaya','Mangkubumi'),K('Kota Tasikmalaya','Cipedes')]},
+      {id:'cirebon',nama:'Cirebon',provinsi:'Jawa Barat',pusat:[-6.7320,108.5523],radiusM:6000,
+        jalan:['Siliwangi','Yos Sudarso','Kartini','Pemuda','Kalibaru','Cipto Mangunkusumo','Dewi Sartika','Pangeran Cakrabuana','Tentara Pelajar','Sukarno-Hatta'],
+        kecamatan:[K('Kota Cirebon','Kejaksan'),K('Kota Cirebon','Lemahwungkuk'),K('Kota Cirebon','Pekalipan'),K('Kota Cirebon','Kesambi'),K('Kota Cirebon','Harjamukti')]},
+      {id:'sukabumi',nama:'Sukabumi',provinsi:'Jawa Barat',pusat:[-6.9180,106.9266],radiusM:6000,
+        jalan:['Jend. Sudirman','Ahmad Yani','Siliwangi','R.E. Martadinata','Otto Iskandar di Nata','Juanda','Cikole','Bhayangkara','Sukaraja','Prana'],
+        kecamatan:[K('Kota Sukabumi','Gunungpuyuh'),K('Kota Sukabumi','Cikole'),K('Kota Sukabumi','Citamiang'),K('Kota Sukabumi','Warudoyong'),K('Kota Sukabumi','Baros'),K('Kota Sukabumi','Lembursitu'),K('Kota Sukabumi','Cibeureum')]},
+      {id:'badung',nama:'Badung (Kuta)',provinsi:'Bali',pusat:[-8.5963,115.1792],radiusM:8000,
+        jalan:['Raya Kuta','Raya Kerobokan','Raya Seminyak','Raya Legian','Ngurah Rai','Raya Mengwi','Raya Dalung','Sunset Road','Bypass Ngurah Rai','Raya Umalas','Raya Canggu'],
+        kecamatan:[K('Kabupaten Badung','Kuta'),K('Kabupaten Badung','Kuta Selatan'),K('Kabupaten Badung','Kuta Utara'),K('Kabupaten Badung','Mengwi'),K('Kabupaten Badung','Abiansemal'),K('Kabupaten Badung','Petang')]},
+      {id:'gianyar',nama:'Gianyar (Ubud)',provinsi:'Bali',pusat:[-8.5418,115.3280],radiusM:6000,
+        jalan:['Raya Ubud','Raya Gianyar','Raya Tegalalang','Raya Payangan','Raya Sukawati','Raya Batubulan','Raya Celuk','Raya Mas','Raya Tegallalang'],
+        kecamatan:[K('Kabupaten Gianyar','Ubud'),K('Kabupaten Gianyar','Gianyar'),K('Kabupaten Gianyar','Sukawati'),K('Kabupaten Gianyar','Blahbatuh'),K('Kabupaten Gianyar','Tampaksiring'),K('Kabupaten Gianyar','Tegalalang'),K('Kabupaten Gianyar','Payangan')]},
+      {id:'buleleng',nama:'Buleleng (Singaraja)',provinsi:'Bali',pusat:[-8.1106,115.0876],radiusM:6000,
+        jalan:['Jend. A. Yani','Ngurah Rai','Gadjah Mada','Diponegoro','Pramuka','Pulau Irian','Kartini','Surapati','Veteran','Sudirman'],
+        kecamatan:[K('Kabupaten Buleleng','Singaraja'),K('Kabupaten Buleleng','Buleleng'),K('Kabupaten Buleleng','Banjar'),K('Kabupaten Buleleng','Busungbiu'),K('Kabupaten Buleleng','Gerokgak'),K('Kabupaten Buleleng','Kubutambahan'),K('Kabupaten Buleleng','Sawan'),K('Kabupaten Buleleng','Seririt'),K('Kabupaten Buleleng','Sukasada'),K('Kabupaten Buleleng','Tejakula')]},
+      {id:'karangasem',nama:'Karangasem (Amlapura)',provinsi:'Bali',pusat:[-8.4443,115.6067],radiusM:5000,
+        jalan:['Ngurah Rai','Veteran','Yos Sudarso','Ahmad Yani','Pangeran I Gusti Ngurah','Raya Amlapura','Raya Karangasem','Raya Sidemen'],
+        kecamatan:[K('Kabupaten Karangasem','Karangasem'),K('Kabupaten Karangasem','Abang'),K('Kabupaten Karangasem','Bebandem'),K('Kabupaten Karangasem','Kubu'),K('Kabupaten Karangasem','Manggis'),K('Kabupaten Karangasem','Rendang'),K('Kabupaten Karangasem','Selat'),K('Kabupaten Karangasem','Sidemen')]},
+      {id:'tabanan',nama:'Tabanan',provinsi:'Bali',pusat:[-8.5377,115.0911],radiusM:5000,
+        jalan:['Raya Tabanan','Raya Kediri','Raya Marga','Raya Penebel','Raya Baturiti','Raya Selemadeg','Raya Kerambitan','Raya Pupuan'],
+        kecamatan:[K('Kabupaten Tabanan','Tabanan'),K('Kabupaten Tabanan','Kediri'),K('Kabupaten Tabanan','Marga'),K('Kabupaten Tabanan','Penebel'),K('Kabupaten Tabanan','Baturiti'),K('Kabupaten Tabanan','Selemadeg'),K('Kabupaten Tabanan','Selemadeg Barat'),K('Kabupaten Tabanan','Selemadeg Timur'),K('Kabupaten Tabanan','Kerambitan'),K('Kabupaten Tabanan','Pupuan')]}
+    ];
+
+    const TIPE_ALAMAT=[
+      {id:'jalan',label:'Jl / Jalan / Gg'},
+      {id:'perumahan',label:'Perum / Perumahan'},
+      {id:'komplek',label:'Komp / Komplek'},
+      {id:'cluster',label:'Cluster'},
+      {id:'residens',label:'Residence'},
+      {id:'griya',label:'Griya'},
+      {id:'puri',label:'Puri'},
+      {id:'villa',label:'Vila'}
+    ];
+
+    function kategoriPOIUntukTipe(t){
+      switch(t){
+        case 'jalan':return 'commercial,catering,accommodation,building,amenity';
+        case 'perumahan':return 'building.residential,place.neighbourhood,landuse.residential';
+        case 'komplek':return 'commercial,building.commercial';
+        case 'cluster':return 'place.neighbourhood,landuse.residential,building.residential';
+        case 'residens':return 'building.residential,accommodation.apartment';
+        case 'griya':return 'building.residential,place.neighbourhood';
+        case 'puri':return 'building.residential,place.neighbourhood';
+        case 'villa':return 'accommodation.villa,building.residential';
+        default:return 'building.residential,commercial,catering';
+      }
+    }
+
+    function bacaLS(key,def){try{const v=localStorage.getItem(key);return v===null?def:v;}catch(e){return def;}}
+    function tulisLS(key,val){try{localStorage.setItem(key,val);}catch(e){}}
+    function hapusLS(key){try{localStorage.removeItem(key);}catch(e){}}
+    function bacaKotaTersimpan(){try{const raw=localStorage.getItem('rys_kota_terimpan');if(raw)return JSON.parse(raw);}catch(e){}return [];}
+    function simpanKotaTersimpan(list){try{localStorage.setItem('rys_kota_terimpan',JSON.stringify(list));}catch(e){}}
+
+    const _manualGeo=bacaLS('rys_geoapify_key','');
+    const state={
+      cityId:'jakarta',
+      customCity:null,
+      streetsOnline:null,
+      syncSource:'offline',
+      geoApifyEnabled:true,
+      geoApifyKey:_manualGeo||KEYS_GEOPIFY_DEFAULT[0],
+      geoApifyManual:!!_manualGeo,
+      geoApifyValid:!!_manualGeo,
+      geoApifyBadKeys:new Set(),
+      googleKey:bacaLS('rys_google_key',''),
+      kotaTersimpan:bacaKotaTersimpan(),
+      cacheGeo:new Map(),
+      last:null
+    };
+    const getCity=()=>state.customCity||CITIES.find(c=>c.id===state.cityId)||CITIES[0];
+
+    async function validasiKeyGeo(key){
+      try{
+        const city=getCity();
+        const r=await fetch('https://api.geoapify.com/v1/geocode/reverse?lat='+city.pusat[0]+'&lon='+city.pusat[1]+'&apiKey='+encodeURIComponent(key));
+        if(!r.ok)return {ok:false,status:r.status};
+        const j=await r.json();
+        const props=j.features&&j.features[0]&&j.features[0].properties;
+        if(props&&props.formatted)return {ok:true,contoh:props.formatted};
+        return {ok:false,status:'invalid'};
+      }catch(e){return {ok:false,status:'network'};}
+    }
+
+    function fallbackGeoKey(){
+      const active=state.geoApifyKey;
+      const good=KEYS_GEOPIFY_DEFAULT.find(k=>k&&!state.geoApifyBadKeys.has(k)&&k!==active);
+      if(good){state.geoApifyKey=good;return true;}
+      const anyDefault=KEYS_GEOPIFY_DEFAULT.find(k=>!state.geoApifyBadKeys.has(k));
+      if(anyDefault){state.geoApifyKey=anyDefault;return true;}
+      return false;
+    }
+
+    function setSumber(kunci,teksOverride){
+      const map={offline:{cls:'text-slate-300 bg-white/[0.05] ring-white/10',icon:'database',teks:'Offline · data bawaan'},syncing:{cls:'text-amber-300 bg-amber-500/10 ring-amber-500/30',icon:'refresh-cw',teks:'Sinkronisasi…'},osm:{cls:'text-emerald-300 bg-emerald-500/10 ring-emerald-500/30',icon:'globe',teks:'Online · OpenStreetMap'},geoapify:{cls:'text-sky-300 bg-sky-500/10 ring-sky-500/30',icon:'globe',teks:'Online · Geoapify'},google:{cls:'text-indigo-300 bg-indigo-500/10 ring-indigo-500/30',icon:'map-pin',teks:'Online · Google Maps'}};
+      const o=map[kunci]||map.offline;const badge=document.getElementById('badgeSumber');
+      badge.className='inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-widest rounded-full px-3.5 py-1.5 backdrop-blur-xl select-none ring-1 '+o.cls;
+      badge.innerHTML='<img src="https://unpkg.com/lucide-static@1.44.0/icons/'+o.icon+'.svg" alt="" class="w-3.5 h-3.5 invert opacity-80" onerror="this.style.display=\'none\';"><span>'+(teksOverride||o.teks)+'</span>';
+    }
+
+    function updateBadge(){
+      const mode=getMode();
+      if(mode==='sintesis'){
+        setSumber('offline');
+      } else if(state.geoApifyEnabled && state.geoApifyValid){
+        setSumber('geoapify');
+      } else if(state.googleKey){
+        setSumber('google');
+      } else {
+        setSumber('osm');
+      }
+      updateIndikatorUI();
+    }
+
+    function updateIndikatorUI(){
+      const mode=getMode();
+      const statusEl=document.getElementById('statusSumberAktif');
+      const panelG=document.getElementById('panelGeoapify');
+      const panelL=document.getElementById('panelGoogle');
+      [panelG,panelL].forEach(el=>{
+        if(!el)return;
+        el.classList.remove('ring-emerald-400/50','bg-emerald-500/[0.06]','ring-indigo-400/50','bg-indigo-500/[0.06]');
+      });
+      let aktif='—';
+      if(mode==='sintesis'){
+        aktif='Data lokal (offline)';
+      } else if(state.geoApifyEnabled && state.geoApifyValid){
+        aktif='Geoapify';
+        if(panelG)panelG.classList.add('ring-emerald-400/50','bg-emerald-500/[0.06]');
+      } else if(state.googleKey){
+        aktif='Google Maps';
+        if(panelL)panelL.classList.add('ring-indigo-400/50','bg-indigo-500/[0.06]');
+      } else {
+        aktif='OpenStreetMap';
+      }
+      if(statusEl)statusEl.textContent='Sumber aktif saat ini: '+aktif;
+    }
+
+    async function cobaOverpassStreets(city){
+      try{
+        const q='[out:json][timeout:8];way(around:'+Math.max(city.radiusM,8000)+','+city.pusat[0]+','+city.pusat[1]+')["highway"]["name"];out tags 250;';
+        const j=await fetchJSON('https://overpass-api.de/api/interpreter',8000,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:'data='+encodeURIComponent(q)});
+        return uniq((j.elements||[]).map(e=>(e.tags&&e.tags.name)?bersihkanJalan(e.tags.name):null).filter(Boolean));
+      }catch(e){return [];}
+    }
+    async function cobaNominatimStreets(city){
+      try{
+        const u='https://nominatim.openstreetmap.org/search?format=jsonv2&limit=80&country=Indonesia&featureType=highway&city='+encodeURIComponent(city.nama);
+        const j=await fetchJSON(u);
+        return uniq(j.map(p=>bersihkanJalan((p.display_name||'').split(',')[0])).filter(Boolean));
+      }catch(e){return [];}
+    }
+    async function syncDariPeta(){
+      const city=getCity();const btn=document.getElementById('btnSync');btn.disabled=true;setSumber('syncing');
+      let online=await cobaOverpassStreets(city);
+      if(!online.length)online=await cobaNominatimStreets(city);
+      if(online.length){state.streetsOnline=online;state.syncSource=state.geoApifyValid?'geoapify':(state.googleKey?'google':'osm');}
+      else{state.streetsOnline=null;state.syncSource='offline';}
+      updateBadge();
+      btn.disabled=false;
+    }
+
+    function poolJalan(){const city=getCity();return uniq((state.customCity?GLOBAL_JALAN:city.jalan).concat(GLOBAL_JALAN).concat(state.streetsOnline||[]));}
+
+    function buatBarisAlamat(tipe,jalan){
+      const no=rand(1,250),blok=hurufBlok(),arahan=pick(['Barat','Timur','Utara','Selatan']);
+      switch(tipe){
+        case 'jalan':return rand(1,2)===1?`Jl. ${jalan} No. ${no}`:`Jl. ${jalan} Gang ${pick(GANG)} No. ${no}`;
+        case 'perumahan':return `Perum ${pick(PERUM)} ${jalan} Blok ${blok}-${no}`;
+        case 'komplek':return rand(1,2)===1?`Komplek ${pick(KOMPLEK)} Boulevard Blok ${blok}${rand(1,9)}/${arahan} No. ${no}`:`Komplek ${pick(KOMPLEK)} ${jalan} Blok ${blok}-${no}`;
+        case 'cluster':return `Cluster ${pick(CLUSTER)} ${jalan} Blok ${blok}-${no}`;
+        case 'residens':return rand(1,2)===1?`Residence ${pick(VILLA)} ${jalan} No. ${no}`:`Apartemen ${pick(KOMPLEK)} ${jalan} No. ${no}`;
+        case 'griya':return `Griya ${pick(GRIYA)} ${jalan} Blok ${blok}-${no}`;
+        case 'puri':return `Puri ${pick(PURI)} ${jalan} Blok ${blok}-${no}`;
+        case 'villa':return `Villa ${pick(VILLA)} ${jalan} No. ${no}`;
+        default:return `Jl. ${jalan} No. ${no}`;
+      }
+    }
+
+    function alamatPenuh(a){
+      if(a.baris){
+        return [a.baris,`RT ${a.rt}/RW ${a.rw}`,a.kelurahan?`Kel. ${a.kelurahan}`:null,a.kecamatan?`Kec. ${a.kecamatan}`:null,a.kota,a.provinsi,a.kodePos].filter(Boolean).join(', ');
+      }
+      return a.alamat||'';
+    }
+    function alamatSingkat(a){
+      if(a.baris){
+        return `${a.baris}, RT ${a.rt}/RW ${a.rw}`;
+      }
+      var s=(a.alamat||'').trim();
+      if(!s)return '';
+      var parts=s.split(',');
+      if(parts.length>2)return parts.slice(0,2).join(',').trim();
+      return s;
+    }
+
+    function buatAlamatLengkap(jalan,daftarNama,daftarPatokan,src,tipeDipilih){
+      const city=getCity();
+      const kec=(city.kecamatan&&city.kecamatan.length)?pick(city.kecamatan):null;
+      const kel=(kec&&kec.kelurahan&&kec.kelurahan.length)?pick(kec.kelurahan):null;
+      const poolTipe=tipeDipilih&&tipeDipilih.length?tipeDipilih:TIPE_ALAMAT.map(t=>t.id);
+      const a={nama:pick(daftarNama),patokan:pick(daftarPatokan),src,baris:buatBarisAlamat(pick(poolTipe),jalan),rt:pad2(rand(1,20)),rw:pad2(rand(1,20)),kelurahan:kel,kecamatan:kec?kec.nama:null,kota:(kec&&kec.kota)?kec.kota:city.nama,provinsi:city.provinsi,kodePos:(kec&&kec.kp)?kec.kp:null};
+      a.alamat=alamatPenuh(a);return a;
+    }
+
+    function generateAlamatSintesis(daftarNama,daftarPatokan,tipeDipilih,digunakanSet,maxCoba=40){
+      for(let c=0;c<maxCoba;c++){
+        const city=getCity();
+        const kec=(city.kecamatan&&city.kecamatan.length)?pick(city.kecamatan):null;
+        const kel=(kec&&kec.kelurahan&&kec.kelurahan.length)?pick(kec.kelurahan):null;
+        const tipe=pick(tipeDipilih),jalan=pick(poolJalan());
+        const a=buatAlamatLengkap(jalan,daftarNama,daftarPatokan,'Data lokal',tipeDipilih);
+        a.baris=buatBarisAlamat(tipe,jalan);a.rt=pad2(rand(1,20));a.rw=pad2(rand(1,20));a.kelurahan=kel;a.kecamatan=kec?kec.nama:null;a.kota=(kec&&kec.kota)?kec.kota:city.nama;a.kodePos=(kec&&kec.kp)?kec.kp:null;a.alamat=alamatPenuh(a);
+        const kunci=a.alamat+'\u0001'+a.nama;
+        if(!digunakanSet.has(kunci)){digunakanSet.add(kunci);return a;}
+      }
+      return buatAlamatLengkap(pick(poolJalan()),daftarNama,daftarPatokan,'Data lokal',tipeDipilih);
+    }
+
+    function titikAcakDalamRadius(city){
+      const[la,lo]=city.pusat,R=city.radiusM,t=Math.random()*2*Math.PI,r=R*Math.sqrt(Math.random());
+      return{lat:la+(r*Math.cos(t))/111320,lng:lo+(r*Math.sin(t))/(111320*Math.cos(la*Math.PI/180))};
+    }
+
+    async function ambilPOIGeoapify(categories,digunakanSet){
+      for(let i=0;i<3;i++){
+        const p=titikAcakDalamRadius(getCity());
+        const kunci=p.lat.toFixed(3)+','+p.lng.toFixed(3);
+        if(state.cacheGeo.has(kunci)){const c=state.cacheGeo.get(kunci);if(c.type==='poi'&&!digunakanSet.has(c.alamat)){return{alamat:c.alamat,src:'Geoapify · POI',lat:p.lat,lng:p.lng,cache:true};}continue;}
+        try{
+          const r=await fetch('https://api.geoapify.com/v2/places?lat='+p.lat+'&lon='+p.lng+'&radius=500&limit=10&categories='+encodeURIComponent(categories)+'&apiKey='+encodeURIComponent(state.geoApifyKey));
+          if(!r.ok){
+            if(!state.geoApifyManual) state.geoApifyBadKeys.add(state.geoApifyKey);
+            if(!state.geoApifyManual && fallbackGeoKey()){i--;continue;}
+            return null;
+          }
+          const j=await r.json();
+          const feats=j.features||[];
+          for(const f of feats){
+            const props=f.properties;if(!props||!props.street||!props.name)continue;
+            const alamat=(props.formatted||'').replace(/,\s*Indonesia\s*$/,'').trim();if(!alamat)continue;
+            if(digunakanSet.has(alamat))continue;
+            const geom=f.geometry&&f.geometry.coordinates;
+            const lat=geom?geom[1]:p.lat,lng=geom?geom[0]:p.lng;
+            state.cacheGeo.set(kunci,{type:'poi',alamat});
+            return{alamat,src:'Geoapify · POI',lat,lng};
+          }
+        }catch(e){}
+        await sleep(120);
+      }
+      return null;
+    }
+
+    async function ambilJalanGeoapify(){
+      for(let i=0;i<6;i++){
+        const p=titikAcakDalamRadius(getCity());
+        const kunci=p.lat.toFixed(3)+','+p.lng.toFixed(3);
+        if(state.cacheGeo.has(kunci)){const c=state.cacheGeo.get(kunci);if(c.type==='street'){return{jalan:c.jalan,lat:p.lat,lng:p.lng,src:'Geoapify',cache:true};}continue;}
+        try{
+          const r=await fetch('https://api.geoapify.com/v1/geocode/reverse?lat='+p.lat+'&lon='+p.lng+'&apiKey='+encodeURIComponent(state.geoApifyKey));
+          if(!r.ok){
+            if(!state.geoApifyManual) state.geoApifyBadKeys.add(state.geoApifyKey);
+            if(!state.geoApifyManual && fallbackGeoKey()){i--;continue;}
+            return null;
+          }
+          const j=await r.json();
+          const props=j.features&&j.features[0]&&j.features[0].properties;
+          if(!props)continue;
+          const jalan=bersihkanJalan(props.street||'');
+          if(jalan){state.cacheGeo.set(kunci,{type:'street',jalan});return{jalan,lat:p.lat,lng:p.lng,src:'Geoapify'};}
+        }catch(e){}
+        await sleep(120);
+      }
+      return null;
+    }
+
+    async function geocodeGoogle(lat,lng){
+      const base='https://maps.googleapis.com/maps/api/geocode/json?latlng='+lat+','+lng+'&language=id&key='+encodeURIComponent(state.googleKey);
+      try{return await fetchJSON(base);}catch(e){return await jsonp(base);}
+    }
+    async function ambilJalanGoogle(){
+      for(let i=0;i<6;i++){
+        const p=titikAcakDalamRadius(getCity());
+        const kunci=p.lat.toFixed(3)+','+p.lng.toFixed(3);
+        if(state.cacheGeo.has(kunci)){const c=state.cacheGeo.get(kunci);if(c.type==='street'){return{jalan:c.jalan,lat:p.lat,lng:p.lng,src:'Google API',cache:true};}continue;}
+        try{
+          const j=await geocodeGoogle(p.lat,p.lng);
+          if(j.status!=='OK'||!j.results.length)continue;
+          const res=j.results[0];
+          const comp=(res.address_components||[]).find(x=>x.types.includes('route'));
+          if(comp){const jalan=bersihkanJalan(comp.long_name);if(jalan){state.cacheGeo.set(kunci,{type:'street',jalan});return{jalan,lat:p.lat,lng:p.lng,src:'Google API'};}}
+        }catch(e){}
+        await sleep(120);
+      }
+      return null;
+    }
+    async function ambilJalanOSM(){
+      for(let i=0;i<6;i++){
+        const p=titikAcakDalamRadius(getCity());
+        const kunci=p.lat.toFixed(3)+','+p.lng.toFixed(3);
+        if(state.cacheGeo.has(kunci)){const c=state.cacheGeo.get(kunci);if(c.type==='street'){return{jalan:c.jalan,lat:p.lat,lng:p.lng,src:'Peta · OSM',cache:true};}continue;}
+        try{
+          const d=await fetchJSON('https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat='+p.lat+'&lon='+p.lng+'&zoom=18&addressdetails=1');
+          const ad=d.address||{};
+          const raw=ad.road||ad.pedestrian||ad.footway||ad.highway||ad.service||ad.path||null;
+          if(raw){const jalan=bersihkanJalan(raw);if(jalan){state.cacheGeo.set(kunci,{type:'street',jalan});return{jalan,lat:p.lat,lng:p.lng,src:'Peta · OSM'};}}
+        }catch(e){}
+        await sleep(1000);
+      }
+      return null;
+    }
+    async function ambilJalanDenganFallback(){
+      const list=[];
+      if(state.geoApifyEnabled && state.geoApifyValid) list.push('geoapify');
+      if(state.googleKey) list.push('google');
+      list.push('osm');
+      for(const prov of list){
+        const res=prov==='geoapify'?await ambilJalanGeoapify():prov==='google'?await ambilJalanGoogle():await ambilJalanOSM();
+        if(res) return res;
+      }
+      return {jalan:pick(poolJalan()), lat:null, lng:null, src:'Fallback lokal'};
+    }
+
+    async function geocodeKota(nama){
+      if(state.geoApifyEnabled && state.geoApifyValid){
+        try{
+          const r=await fetch('https://api.geoapify.com/v1/geocode/search?text='+encodeURIComponent(nama+', Indonesia')+'&lang=id&limit=1&apiKey='+encodeURIComponent(state.geoApifyKey));
+          if(!r.ok) return null;
+          const j=await r.json();
+          const f=j.features&&j.features[0];if(!f)return null;
+          const p=f.properties;return{lat:p.lat,lon:p.lon,nama:p.city||p.county||p.state||nama,provinsi:p.state||'Indonesia'};
+        }catch(e){return null;}
+      }else{
+        try{
+          const j=await fetchJSON('https://nominatim.openstreetmap.org/search?format=jsonv2&q='+encodeURIComponent(nama+' Indonesia')+'&countrycodes=id&limit=1');
+          if(j.length){const p=j[0];return{lat:+p.lat,lon:+p.lon,nama:nama,provinsi:'Indonesia'};}
+        }catch(e){}
+        return null;
+      }
+    }
+    function buatKotaCustom(info){return{id:'custom',nama:info.nama,provinsi:info.provinsi,pusat:[info.lat,info.lon],radiusM:5000,jalan:GLOBAL_JALAN.slice(0,8),kecamatan:[]};}
+
+    function tambahDatalistKota(nama){
+      const dl=document.getElementById('daftarKota');
+      const ada=[...dl.options].some(o=>o.value.toLowerCase()===nama.toLowerCase());
+      if(!ada){const o=document.createElement('option');o.value=nama;dl.appendChild(o);}
+    }
+
+    async function terapkanKota(namaRaw){
+      const nama=namaRaw.trim();
+      if(!nama)return;
+      const c=CITIES.find(c=>c.nama.toLowerCase()===nama.toLowerCase()||c.nama.toLowerCase().startsWith(nama.toLowerCase()));
+      if(c){
+        state.customCity=null;state.cityId=c.id;state.streetsOnline=null;state.syncSource='offline';setSumber('offline');
+        document.getElementById('statusKotaCustom').textContent='✓ '+c.nama+' ('+c.provinsi+') dipakai.';
+        if(navigator.onLine)syncDariPeta();
+        return;
+      }
+      const simpan=state.kotaTersimpan.find(k=>k.nama.toLowerCase()===nama.toLowerCase());
+      if(simpan){
+        state.customCity=buatKotaCustom(simpan);state.cityId='custom';state.streetsOnline=null;state.syncSource='offline';setSumber('offline');
+        document.getElementById('statusKotaCustom').textContent='✓ Kota tersimpan: '+simpan.nama+' ('+simpan.provinsi+').';
+        if(navigator.onLine)syncDariPeta();
+        return;
+      }
+      if(!navigator.onLine){document.getElementById('statusKotaCustom').textContent='✗ Butuh internet untuk mencari kota baru.';return;}
+      document.getElementById('statusKotaCustom').textContent='Mencari "'+nama+'"…';
+      const info=await geocodeKota(nama);
+      if(!info){document.getElementById('statusKotaCustom').textContent='✗ Kota tidak ditemukan. Coba nama lain.';return;}
+      state.customCity=buatKotaCustom(info);state.cityId='custom';state.streetsOnline=null;state.syncSource='offline';setSumber('offline');
+      document.getElementById('statusKotaCustom').textContent='✓ Terpilih: '+info.nama+' ('+info.provinsi+').';
+      if(!state.kotaTersimpan.some(x=>x.nama.toLowerCase()===info.nama.toLowerCase())){
+        state.kotaTersimpan.push({nama:info.nama,provinsi:info.provinsi,lat:info.lat,lon:info.lon});
+        simpanKotaTersimpan(state.kotaTersimpan);
+        tambahDatalistKota(info.nama);
+      }
+      syncDariPeta();
+    }
+
+    const tipeContainer=document.getElementById('tipeOptions');
+    function renderTipeOptions(){
+      tipeContainer.innerHTML='';
+      TIPE_ALAMAT.forEach(t=>{
+        const label=document.createElement('label');
+        label.className='flex items-center gap-2 rounded-xl border border-white/10 bg-white/[0.04] px-3 py-2.5 cursor-pointer select-none transition hover:border-indigo-500/40 hover:bg-white/[0.07] has-[:checked]:border-indigo-500/60 has-[:checked]:bg-indigo-500/15';
+        const input=document.createElement('input');
+        input.type='checkbox';input.value=t.id;input.checked=false;
+        input.className='appearance-none shrink-0 w-4 h-4 rounded border-2 border-slate-600 bg-slate-800/60 cursor-pointer transition checked:bg-indigo-500 checked:border-indigo-500 checked:bg-[url("data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20viewBox=%270%200%2024%2024%27%20fill=%27none%27%20stroke=%27white%27%20stroke-width=%273.5%27%20stroke-linecap=%27round%27%20stroke-linejoin=%27round%27%3E%3Cpath%20d=%27M20%206L9%2017l-5-5%27/%3E%3C/svg%3E")] bg-center bg-no-repeat bg-contain';
+        const span=document.createElement('span');span.className='text-[13px] font-medium text-slate-300 leading-tight transition';span.textContent=t.label;
+        label.appendChild(input);label.appendChild(span);tipeContainer.appendChild(label);
+      });
+    }
+    function ambilTipeDipilih(){const checked=[...tipeContainer.querySelectorAll('input:checked')].map(cb=>cb.value);return checked.length?checked:TIPE_ALAMAT.map(t=>t.id);}
+
+    const daftarUl=document.getElementById('daftarAlamat'),hasilSection=document.getElementById('hasilSection'),jumlahPill=document.getElementById('jumlahPill'),errorMsg=document.getElementById('errorMsg'),progresHasil=document.getElementById('progresHasil');
+    let hasilTerakhir=[];
+    function showError(p){errorMsg.textContent='⚠️ '+p;errorMsg.classList.remove('hidden');hasilSection.classList.add('hidden');errorMsg.scrollIntoView({behavior:'smooth',block:'center'});}
+    function hideError(){errorMsg.classList.add('hidden');}
+
+    function teksSingle(a){
+      const b=[alamatSingkat(a)];
+      if(a.patokan)b.push(a.patokan);
+      b.push(a.nama);
+      return b.join('\n');
+    }
+    function teksDenganNomor(no,a){
+      const b=[`${no}. ${alamatSingkat(a)}`];
+      if(a.patokan)b.push(a.patokan);
+      b.push(a.nama);
+      return b.join('\n');
+    }
+    function gabungSemuaHasil(){
+      return hasilTerakhir.map((a,i)=>teksDenganNomor(i+1,a)).join('\n\n');
+    }
+
+    function badgeClassForSrc(src){
+      if(!src) return 'text-slate-500 bg-white/[0.04] ring-white/10';
+      if(src.indexOf('Geoapify')>=0) return 'text-sky-300 bg-sky-500/15 ring-sky-500/40';
+      if(src.indexOf('Google')>=0) return 'text-indigo-300 bg-indigo-500/15 ring-indigo-500/40';
+      if(src.indexOf('OSM')>=0) return 'text-emerald-300 bg-emerald-500/15 ring-emerald-500/40';
+      if(src.indexOf('Fallback')>=0) return 'text-amber-300 bg-amber-500/15 ring-amber-500/40';
+      return 'text-slate-500 bg-white/[0.04] ring-white/10';
+    }
+
+    function labelHasil(hasil){
+      if(getMode()==='sintesis') return 'Data lokal';
+      const pertama=hasil && hasil[0];
+      if(!pertama || !pertama.src) return 'Peta';
+      const s=pertama.src;
+      if(s.indexOf('Geoapify')>=0) return 'Geoapify';
+      if(s.indexOf('Google')>=0) return 'Google API';
+      if(s.indexOf('OSM')>=0) return 'Peta OSM';
+      if(s.indexOf('Fallback')>=0) return 'Fallback lokal';
+      return s;
+    }
+
+    function buatLinkGoogleMaps(a){return(a.lat!=null&&a.lng!=null)?'https://www.google.com/maps/search/?api=1&query='+a.lat+','+a.lng:'https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(alamatPenuh(a));}
+    function buatItem(no,a){
+      const li=document.createElement('li');li.className='relative flex gap-4 bg-white/[0.04] backdrop-blur-xl rounded-2xl ring-1 ring-white/10 px-5 py-4 transition hover:ring-indigo-500/40 hover:bg-white/[0.06]';
+      const nomor=document.createElement('span');nomor.className='shrink-0 inline-flex items-center justify-center w-8 h-8 rounded-lg bg-indigo-500/15 ring-1 ring-indigo-500/30 text-indigo-300 text-xs font-black';nomor.textContent=String(no).padStart(2,'0');li.appendChild(nomor);
+      const isi=document.createElement('div');isi.className='flex-1 min-w-0';
+      const alamatP=document.createElement('p');alamatP.className='text-sm text-slate-100 leading-relaxed';alamatP.textContent=alamatPenuh(a);isi.appendChild(alamatP);
+      if(a.patokan){const p=document.createElement('p');p.className='text-sm text-slate-400 leading-relaxed';p.textContent=a.patokan;isi.appendChild(p);}
+      if(a.lat!=null){const k=document.createElement('p');k.className='text-[11px] font-mono text-slate-500';k.textContent='Koordinat: '+a.lat.toFixed(5)+', '+a.lng.toFixed(5);isi.appendChild(k);}
+      const nama=document.createElement('p');nama.className='text-sm font-bold text-indigo-300 mt-0.5';nama.textContent=a.nama;isi.appendChild(nama);
+
+      // Baris aksi di BAWAH alamat: badge sumber + link Google Maps + tombol salin/tokopedia
+      const aksi=document.createElement('div');aksi.className='flex flex-wrap items-center gap-2 mt-3 pt-3 border-t border-white/5';
+      const badge=document.createElement('span');
+      badge.className='text-[10px] font-bold uppercase tracking-widest rounded-full px-2 py-0.5 ring-1 '+badgeClassForSrc(a.src);
+      badge.textContent=(a.src||'Data lokal')+(a.cache?' · cache':'');
+      aksi.appendChild(badge);
+      const linkMap=document.createElement('a');linkMap.href=buatLinkGoogleMaps(a);linkMap.target='_blank';linkMap.rel='noopener noreferrer';linkMap.className='inline-flex items-center gap-1 text-[11px] font-semibold text-slate-400 hover:text-indigo-300 transition';linkMap.innerHTML='<img src="https://unpkg.com/lucide-static@1.44.0/icons/external-link.svg" alt="" class="w-3 h-3 invert opacity-70" onerror="this.style.display=\'none\';"><span>Buka di Google Maps</span>';aksi.appendChild(linkMap);
+
+      const grupAksi=document.createElement('div');grupAksi.className='ml-auto inline-flex items-center gap-1';
+      const btnCopy=document.createElement('button');btnCopy.type='button';btnCopy.title='Salin';btnCopy.className='inline-flex items-center gap-1 text-xs font-semibold text-slate-500 hover:text-indigo-300 transition';btnCopy.innerHTML='<img src="https://unpkg.com/lucide-static@1.44.0/icons/copy.svg" alt="" class="w-3.5 h-3.5 invert opacity-70" onerror="this.style.display=\'none\';"><span class="label">Salin</span>';btnCopy.addEventListener('click',()=>salin(teksSingle(a),btnCopy));grupAksi.appendChild(btnCopy);
+      const btnTokopedia=document.createElement('button');
+      btnTokopedia.type='button';
+      btnTokopedia.title='Salin & buka Tambah Alamat Tokopedia';
+      btnTokopedia.className='inline-flex items-center gap-1 text-xs font-semibold text-slate-500 hover:text-emerald-300 transition';
+      btnTokopedia.innerHTML='<img src="https://unpkg.com/lucide-static@1.44.0/icons/store.svg" alt="" class="w-3.5 h-3.5 invert opacity-70" onerror="this.style.display=\'none\';"><span class="label">Tokopedia</span>';
+      btnTokopedia.addEventListener('click',()=>{
+        salin(teksSingle(a),btnTokopedia);
+        window.open('https://www.tokopedia.com/alamat/tambah','_blank','noopener,noreferrer');
+      });
+      grupAksi.appendChild(btnTokopedia);
+      aksi.appendChild(grupAksi);
+
+      isi.appendChild(aksi);li.appendChild(isi);
+      return li;
+    }
+    function salin(teks,btn){
+      const lbl=btn?btn.querySelector('.label'):null;
+      const done=()=>{if(!lbl)return;const asli=lbl.textContent;lbl.textContent='Tersalin ✓';btn.classList.add('text-emerald-400');setTimeout(()=>{lbl.textContent=asli;btn.classList.remove('text-emerald-400');},1500);};
+      if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(teks).then(done).catch(()=>fallbackSalin(teks,done));}else fallbackSalin(teks,done);
+    }
+    function fallbackSalin(teks,done){try{const ta=document.createElement('textarea');ta.value=teks;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);done();}catch(e){}}
+    function unduhTxt(){const teks=gabungSemuaHasil();const blob=new Blob([teks],{type:'text/plain;charset=utf-8'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='RYS-Tools-Hasil-Alamat.txt';document.body.appendChild(a);a.click();document.body.removeChild(a);setTimeout(()=>URL.revokeObjectURL(url),1000);}
+
+    const inputKota=document.getElementById('inputKota');
+    const datalist=document.getElementById('daftarKota');
+    CITIES.forEach(c=>{const o=document.createElement('option');o.value=c.nama;datalist.appendChild(o);});
+    state.kotaTersimpan.forEach(k=>{const o=document.createElement('option');o.value=k.nama;datalist.appendChild(o);});
+    inputKota.value='Jakarta';
+    inputKota.addEventListener('change',()=>terapkanKota(inputKota.value));
+    inputKota.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();terapkanKota(inputKota.value);}});
+
+    document.getElementById('btnSync').addEventListener('click',syncDariPeta);
+    function getMode(){return document.querySelector('input[name="mode"]:checked').value;}
+    document.querySelectorAll('input[name="mode"]').forEach(r=>{r.addEventListener('change',()=>{
+      if(r.value==='presisi'&&!navigator.onLine){showError('Mode Presisi butuh koneksi internet. Aktifkan internet atau gunakan mode Sintesis.');}else hideError();
+      updateBadge();
+    });});
+
+    // ================= GEOAPIFY KEY (tersedia + manual) =================
+    const inputKeyGeoapify=document.getElementById('inputKeyGeoapify'),statusKeyGeo=document.getElementById('statusKeyGeo'),keyTersimpanGeo=document.getElementById('keyTersimpanGeo'),btnHapusKeyGeo=document.getElementById('btnHapusKeyGeo'),btnGunakanTersedia=document.getElementById('btnGunakanTersedia'),btnTesKeyGeo=document.getElementById('btnTesKeyGeo'),btnTampilkanGeo=document.getElementById('btnTampilkanGeo'),ikonMataGeo=document.getElementById('ikonMataGeo');
+
+    let geoVisible=false;
+    btnTampilkanGeo.addEventListener('click',()=>{
+      geoVisible=!geoVisible;
+      inputKeyGeoapify.type=geoVisible?'text':'password';
+      ikonMataGeo.src='https://unpkg.com/lucide-static@1.44.0/icons/'+(geoVisible?'eye-off':'eye')+'.svg';
+    });
+
+    function labelKeyBerjalan(){
+      if(state.geoApifyManual)return 'manual';
+      const idx=KEYS_GEOPIFY_DEFAULT.indexOf(state.geoApifyKey);
+      return idx>=0?'tersedia #'+(idx+1):'tersedia';
+    }
+
+    function updateTombolTersedia(){
+      if(state.geoApifyEnabled && !state.geoApifyManual){
+        btnGunakanTersedia.className='shrink-0 inline-flex items-center gap-1 text-[11px] font-semibold text-emerald-300 bg-emerald-500/15 ring-1 ring-emerald-500/40 rounded-full px-2.5 py-1 hover:bg-emerald-500/25 transition disabled:opacity-50 disabled:cursor-not-allowed';
+        btnGunakanTersedia.textContent='✓ Key tersedia ON';
+      }else{
+        btnGunakanTersedia.className='shrink-0 inline-flex items-center gap-1 text-[11px] font-semibold text-indigo-300 bg-indigo-500/15 ring-1 ring-indigo-500/30 rounded-full px-2.5 py-1 hover:bg-indigo-500/25 transition disabled:opacity-50 disabled:cursor-not-allowed';
+        btnGunakanTersedia.textContent='Gunakan key tersedia';
+      }
+    }
+
+    function renderStatusGeoKey(){
+      const jenis=labelKeyBerjalan();
+      updateTombolTersedia();
+      if(!state.geoApifyEnabled){
+        statusKeyGeo.textContent='Geoapify nonaktif — generate memakai Google/OSM.';
+        statusKeyGeo.className='text-[11px] text-slate-500';
+        keyTersimpanGeo.textContent='';
+        keyTersimpanGeo.className='text-[11px] font-mono break-all text-slate-500';
+        btnHapusKeyGeo.disabled=true;btnHapusKeyGeo.textContent='Tersedia (tidak bisa dihapus)';
+      } else if(state.geoApifyManual&&state.geoApifyValid){
+        statusKeyGeo.textContent='✓ Key manual valid & aktif.';
+        statusKeyGeo.className='text-[11px] text-emerald-400';
+        keyTersimpanGeo.textContent='Key aktif (manual): '+state.geoApifyKey;
+        keyTersimpanGeo.className='text-[11px] font-mono break-all text-emerald-400/80';
+        btnHapusKeyGeo.disabled=false;btnHapusKeyGeo.textContent='Hapus Key';
+      } else if(state.geoApifyManual&&!state.geoApifyValid){
+        statusKeyGeo.textContent='⚠️ Key manual belum valid — generate tidak berjalan.';
+        statusKeyGeo.className='text-[11px] text-rose-400';
+        keyTersimpanGeo.textContent='Key (manual): '+state.geoApifyKey;
+        keyTersimpanGeo.className='text-[11px] font-mono break-all text-rose-400/80';
+        btnHapusKeyGeo.disabled=false;btnHapusKeyGeo.textContent='Hapus Key';
+      } else {
+        if(state.geoApifyValid){
+          statusKeyGeo.textContent='✓ Key '+jenis+' aktif.';
+          statusKeyGeo.className='text-[11px] text-sky-400';
+          keyTersimpanGeo.textContent='Key aktif ('+jenis+'): '+state.geoApifyKey;
+          keyTersimpanGeo.className='text-[11px] font-mono break-all text-sky-400/80';
+        } else {
+          statusKeyGeo.textContent='✗ Semua key tersedia gagal/limit — generate akan memakai Google/OSM.';
+          statusKeyGeo.className='text-[11px] text-rose-400';
+          keyTersimpanGeo.textContent='';
+          keyTersimpanGeo.className='text-[11px] font-mono break-all text-slate-500';
+        }
+        btnHapusKeyGeo.disabled=true;btnHapusKeyGeo.textContent='Tersedia (tidak bisa dihapus)';
+      }
+      btnTesKeyGeo.disabled=!inputKeyGeoapify.value.trim();
+      updateBadge();
+    }
+
+    document.getElementById('btnSimpanKeyGeo').addEventListener('click',async()=>{
+      const v=inputKeyGeoapify.value.trim();
+      if(!v){statusKeyGeo.textContent='Tempel key dulu.';return;}
+      if(v.includes('://')){statusKeyGeo.textContent='✗ Itu URL, bukan API key.';statusKeyGeo.className='text-[11px] text-rose-400';return;}
+      if(isKeyTersedia(v)){
+        state.geoApifyEnabled=true;
+        state.geoApifyManual=false;
+        state.geoApifyBadKeys.clear();
+        const res=await validasiKeyGeo(v);
+        if(res.ok){
+          state.geoApifyKey=v;state.geoApifyValid=true;
+          hapusLS('rys_geoapify_key');
+          renderStatusGeoKey();
+          statusKeyGeo.textContent='✓ Key ini adalah key tersedia — diaktifkan sebagai key tersedia.';
+          statusKeyGeo.className='text-[11px] text-emerald-400';
+        }else{
+          state.geoApifyValid=false;
+          renderStatusGeoKey();
+          statusKeyGeo.textContent='✗ Key tersedia ini sedang gagal/limit (HTTP '+(res.status||'?')+').';
+          statusKeyGeo.className='text-[11px] text-rose-400';
+        }
+        inputKeyGeoapify.value='';
+        return;
+      }
+      const btn=document.getElementById('btnSimpanKeyGeo');btn.disabled=true;
+      statusKeyGeo.textContent='Memeriksa key…';statusKeyGeo.className='text-[11px] text-amber-300';
+      const res=await validasiKeyGeo(v);
+      if(res.ok){
+        state.geoApifyEnabled=true;
+        state.geoApifyKey=v;state.geoApifyManual=true;state.geoApifyValid=true;state.geoApifyBadKeys.clear();
+        tulisLS('rys_geoapify_key',v);
+        if(state.streetsOnline){state.syncSource='geoapify';}
+        renderStatusGeoKey();
+        statusKeyGeo.textContent='✓ Key manual valid & aktif. Contoh: '+res.contoh;
+        statusKeyGeo.className='text-[11px] text-emerald-400';
+      }else{
+        state.geoApifyValid=false;
+        renderStatusGeoKey();
+        statusKeyGeo.textContent='✗ Key manual TIDAK VALID (HTTP '+(res.status||'?')+') — tidak disimpan. Gunakan key tersedia atau key valid.';
+        statusKeyGeo.className='text-[11px] text-rose-400';
+      }
+      inputKeyGeoapify.value='';
+      btn.disabled=false;
+    });
+
+    btnTesKeyGeo.addEventListener('click',async()=>{
+      const kunciInput=inputKeyGeoapify.value.trim();
+      if(!kunciInput){
+        statusKeyGeo.textContent='Kolom key kosong — tempel key di kolom untuk dites.';
+        statusKeyGeo.className='text-[11px] text-amber-300';
+        return;
+      }
+      btnTesKeyGeo.disabled=true;
+      statusKeyGeo.textContent='Menguji key di kolom…';
+      statusKeyGeo.className='text-[11px] text-amber-300';
+      const res=await validasiKeyGeo(kunciInput);
+      if(res.ok){
+        statusKeyGeo.textContent='✓ Key di kolom valid! Contoh: '+res.contoh+' — klik Simpan untuk memakainya.';
+        statusKeyGeo.className='text-[11px] text-emerald-400';
+      }else{
+        statusKeyGeo.textContent='✗ Key di kolom TIDAK VALID (HTTP '+(res.status||'?')+').';
+        statusKeyGeo.className='text-[11px] text-rose-400';
+      }
+      btnTesKeyGeo.disabled=false;
+    });
+
+    inputKeyGeoapify.addEventListener('input',()=>{btnTesKeyGeo.disabled=!inputKeyGeoapify.value.trim();});
+
+    btnGunakanTersedia.addEventListener('click',async()=>{
+      btnGunakanTersedia.disabled=true;
+      if(!state.geoApifyEnabled || state.geoApifyManual){
+        state.geoApifyEnabled=true;
+        state.geoApifyManual=false;
+        state.geoApifyValid=false;
+        state.geoApifyBadKeys.clear();
+        hapusLS('rys_geoapify_key');
+        statusKeyGeo.textContent='Menguji key tersedia…';statusKeyGeo.className='text-[11px] text-amber-300';
+        let hidup=null;
+        for(const key of KEYS_GEOPIFY_DEFAULT){
+          const res=await validasiKeyGeo(key);
+          if(res.ok){hidup=key;break;}
+        }
+        if(hidup){state.geoApifyKey=hidup;state.geoApifyValid=true;inputKeyGeoapify.value=hidup;}
+        else{state.geoApifyKey=KEYS_GEOPIFY_DEFAULT[0];inputKeyGeoapify.value='';}
+        renderStatusGeoKey();
+        if(state.streetsOnline&&state.geoApifyValid){state.syncSource='geoapify';}
+      }else{
+        state.geoApifyEnabled=false;
+        state.geoApifyManual=false;
+        state.geoApifyValid=false;
+        const manualKey=bacaLS('rys_geoapify_key','');
+        state.geoApifyKey=manualKey||'';
+        inputKeyGeoapify.value=manualKey;
+        renderStatusGeoKey();
+        statusKeyGeo.textContent='Geoapify dimatikan — generate memakai Google/OSM.';
+        statusKeyGeo.className='text-[11px] text-amber-300';
+      }
+      btnGunakanTersedia.disabled=false;
+    });
+
+    btnHapusKeyGeo.addEventListener('click',async()=>{
+      state.geoApifyEnabled=true;
+      state.geoApifyManual=false;state.geoApifyValid=false;state.geoApifyBadKeys.clear();
+      hapusLS('rys_geoapify_key');
+      btnGunakanTersedia.disabled=true;
+      statusKeyGeo.textContent='Kembali ke key tersedia…';statusKeyGeo.className='text-[11px] text-amber-300';
+      let hidup=null;
+      for(const key of KEYS_GEOPIFY_DEFAULT){
+        const res=await validasiKeyGeo(key);
+        if(res.ok){hidup=key;break;}
+      }
+      if(hidup){state.geoApifyKey=hidup;state.geoApifyValid=true;inputKeyGeoapify.value=hidup;}
+      else{state.geoApifyKey=KEYS_GEOPIFY_DEFAULT[0];inputKeyGeoapify.value='';}
+      renderStatusGeoKey();
+      if(state.streetsOnline&&state.geoApifyValid){state.syncSource='geoapify';}
+      btnGunakanTersedia.disabled=false;
+    });
+
+    async function autoTesGeo(){
+      if(!navigator.onLine){renderStatusGeoKey();return;}
+      if(!state.geoApifyEnabled || state.geoApifyManual){renderStatusGeoKey();return;}
+      statusKeyGeo.textContent='Auto-test key tersedia…';statusKeyGeo.className='text-[11px] text-amber-300';
+      let hidup=null;
+      for(const key of KEYS_GEOPIFY_DEFAULT){
+        const res=await validasiKeyGeo(key);
+        if(res.ok){hidup=key;break;}
+      }
+      if(hidup){state.geoApifyKey=hidup;state.geoApifyValid=true;}
+      else{state.geoApifyKey=KEYS_GEOPIFY_DEFAULT[0];state.geoApifyValid=false;}
+      inputKeyGeoapify.value='';
+      renderStatusGeoKey();
+      if(state.streetsOnline&&state.geoApifyValid){state.syncSource='geoapify';}
+      updateBadge();
+    }
+    renderStatusGeoKey();
+
+    // ================= GOOGLE KEY =================
+    const inputKeyGoogle=document.getElementById('inputKeyGoogle'),statusKey=document.getElementById('statusKey'),keyTersimpanGoogle=document.getElementById('keyTersimpanGoogle'),btnTampilkanGoogle=document.getElementById('btnTampilkanGoogle'),ikonMataGoogle=document.getElementById('ikonMataGoogle'),btnTesKey=document.getElementById('btnTesKey');
+    let googleVisible=false;
+    btnTampilkanGoogle.addEventListener('click',()=>{
+      googleVisible=!googleVisible;
+      inputKeyGoogle.type=googleVisible?'text':'password';
+      ikonMataGoogle.src='https://unpkg.com/lucide-static@1.44.0/icons/'+(googleVisible?'eye-off':'eye')+'.svg';
+    });
+    function renderStatusKey(){
+      if(state.googleKey){
+        statusKey.textContent='✓ Key tersimpan.';statusKey.className='text-[11px] text-emerald-400';
+        keyTersimpanGoogle.textContent='Key aktif: '+state.googleKey;keyTersimpanGoogle.className='text-[11px] font-mono break-all text-emerald-400/80';
+      }else{
+        statusKey.textContent='Kosong — tidak dipakai.';statusKey.className='text-[11px] text-slate-500';
+        keyTersimpanGoogle.textContent='';keyTersimpanGoogle.className='text-[11px] font-mono break-all text-slate-500';
+      }
+      btnTesKey.disabled=!inputKeyGoogle.value.trim();
+      updateBadge();
+    }
+    inputKeyGoogle.addEventListener('input',()=>{btnTesKey.disabled=!inputKeyGoogle.value.trim();});
+    document.getElementById('btnSimpanKey').addEventListener('click',()=>{
+      const v=inputKeyGoogle.value.trim();
+      if(!v){statusKey.textContent='Tempel key dulu.';return;}
+      if(v.includes('://')){statusKey.textContent='✗ Itu URL, bukan API key.';statusKey.className='text-[11px] text-rose-400';return;}
+      state.googleKey=v;tulisLS('rys_google_key',v);
+      renderStatusKey();inputKeyGoogle.value='';
+    });
+    document.getElementById('btnHapusKey').addEventListener('click',()=>{state.googleKey='';hapusLS('rys_google_key');renderStatusKey();if(state.streetsOnline){state.syncSource=state.geoApifyValid?'geoapify':'osm';}else state.syncSource='offline';updateBadge();});
+    btnTesKey.addEventListener('click',async()=>{
+      const kunciInput=inputKeyGoogle.value.trim();
+      if(!kunciInput){statusKey.textContent='Kolom key kosong.';return;}
+      btnTesKey.disabled=true;statusKey.textContent='Menguji key…';statusKey.className='text-[11px] text-amber-300';
+      try{
+        const city=getCity();const j=await geocodeGoogle(city.pusat[0],city.pusat[1]);
+        if(j.status==='OK'&&j.results.length){statusKey.textContent='✓ Key valid! Contoh: '+j.results[0].formatted_address;statusKey.className='text-[11px] text-emerald-400';}
+        else{statusKey.textContent='✗ Respon Google: '+j.status;statusKey.className='text-[11px] text-rose-400';}
+      }catch(e){statusKey.textContent='✗ Gagal terhubung ke Google: '+e.message;statusKey.className='text-[11px] text-rose-400';}
+      finally{btnTesKey.disabled=false;}
+    });
+    renderStatusKey();
+
+    document.getElementById('btnBersihkanNama').addEventListener('click',()=>{const ta=document.getElementById('inputNama');ta.value='';ta.focus();});
+    document.getElementById('btnBersihkanPatokan').addEventListener('click',()=>{const ta=document.getElementById('inputPatokan');ta.value='';ta.focus();});
+    document.getElementById('btnResetDefault').addEventListener('click',()=>{document.getElementById('inputNama').value=DATA_DEFAULT_NAMA;document.getElementById('inputPatokan').value=DATA_DEFAULT_PATOKAN;hideError();document.getElementById('inputNama').focus();});
+
+    document.getElementById('formGenerator').addEventListener('submit',async e=>{
+      e.preventDefault();
+      const daftarNama=parseList(document.getElementById('inputNama').value);
+      const daftarPatokan=parseList(document.getElementById('inputPatokan').value);
+      if(!daftarNama.length||!daftarPatokan.length){showError('Isi dulu minimal satu nama dan satu patokan sebelum generate.');return;}
+      const jumlahInput=document.getElementById('inputJumlah');
+      const jumlahRaw=jumlahInput.value.trim();
+      const jumlah=parseInt(jumlahRaw,10);
+      if(!jumlahRaw||!Number.isInteger(jumlah)||jumlah<1){showError('Isi jumlah generate dengan angka bulat minimal 1.');return;}
+      if(jumlah>100000){showError('Jumlah generate maksimal 100.000.');return;}
+      hideError();
+      const tipeDipilih=ambilTipeDipilih();
+      const mode=getMode();
+      const btnGenerate=document.getElementById('btnGenerate');
+      if(mode==='presisi'&&!navigator.onLine){showError('Mode Presisi butuh koneksi internet. Gunakan mode Sintesis.');return;}
+      if(mode==='presisi'&&state.geoApifyEnabled&&state.geoApifyManual&&!state.geoApifyValid){
+        showError('Key manual tidak valid — masukkan key manual valid atau nyalakan "Key tersedia".');
+        return;
+      }
+      hasilTerakhir=[];daftarUl.innerHTML='';
+      const digunakanSet=new Set();
+
+      if(mode==='presisi'){
+        btnGenerate.disabled=true;progresHasil.classList.remove('hidden');
+        const kategoriSet=new Set();
+        tipeDipilih.forEach(t=>{kategoriPOIUntukTipe(t).split(',').forEach(k=>kategoriSet.add(k));});
+        const categories=[...kategoriSet].join(',');
+        try{
+          for(let i=0;i<jumlah;i++){
+            progresHasil.textContent='Mengambil tempat/jalan nyata dari peta… ('+(i+1)+'/'+jumlah+')';
+            let a=null;
+            if(state.geoApifyEnabled && state.geoApifyKey && state.geoApifyValid){
+              for(let att=0;att<3&&!a;att++){
+                const poi=await ambilPOIGeoapify(categories,digunakanSet);
+                if(poi){digunakanSet.add(poi.alamat);a={nama:pick(daftarNama),patokan:pick(daftarPatokan),src:poi.src,alamat:poi.alamat,lat:poi.lat,lng:poi.lng};if(poi.cache)a.cache=true;}
+              }
+            }
+            if(!a){
+              for(let att=0;att<8&&!a;att++){
+                const p=await ambilJalanDenganFallback();
+                const cand=buatAlamatLengkap(p.jalan,daftarNama,daftarPatokan,p.src,tipeDipilih);
+                const kunci=cand.alamat;
+                if(!digunakanSet.has(kunci)){
+                  digunakanSet.add(kunci);
+                  if(p.lat!=null){cand.lat=p.lat;cand.lng=p.lng;}
+                  if(p.cache)cand.cache=true;
+                  a=cand;
+                  if(p.src.indexOf('OSM')>=0)await sleep(1000);
+                  else if(p.src.indexOf('Geoapify')>=0)await sleep(120);
+                }
+              }
+            }
+            if(!a){
+              const p=await ambilJalanDenganFallback();
+              a=buatAlamatLengkap(p.jalan,daftarNama,daftarPatokan,p.src,tipeDipilih);
+              if(p.lat!=null){a.lat=p.lat;a.lng=p.lng;}
+            }
+            hasilTerakhir.push(a);daftarUl.appendChild(buatItem(i+1,a));
+          }
+        }catch(err){showError('Gagal memproses alamat nyata: '+err.message+' — coba lagi, atau gunakan mode Sintesis.');btnGenerate.disabled=false;progresHasil.classList.add('hidden');return;}
+        finally{btnGenerate.disabled=false;progresHasil.classList.add('hidden');}
+      }else{
+        for(let i=0;i<jumlah;i++){const a=generateAlamatSintesis(daftarNama,daftarPatokan,tipeDipilih,digunakanSet);hasilTerakhir.push(a);daftarUl.appendChild(buatItem(i+1,a));}
+      }
+
+      const sumberLabel=labelHasil(hasilTerakhir);
+      jumlahPill.textContent=jumlah+' alamat · '+sumberLabel;jumlahPill.classList.remove('hidden');
+      hasilSection.classList.remove('hidden');hasilSection.scrollIntoView({behavior:'smooth',block:'start'});
+    });
+
+    document.getElementById('btnSalinSemua').addEventListener('click',()=>{if(!hasilTerakhir.length)return;salin(gabungSemuaHasil(),document.getElementById('btnSalinSemua'));});
+    document.getElementById('btnUnduh').addEventListener('click',unduhTxt);
+    document.getElementById('btnBersihkanHasil').addEventListener('click',()=>{daftarUl.innerHTML='';hasilTerakhir=[];jumlahPill.classList.add('hidden');hasilSection.classList.add('hidden');hideError();document.getElementById('formGenerator').scrollIntoView({behavior:'smooth'});});
+
+    const DATA_DEFAULT_NAMA=[
+'Mas KheNzon',
+'Bang KheNzon',
+'Abang KheNzon',
+'Kak KheNzon',
+'Kakak KheNzon',
+'Kang KheNzon',
+'Bli KheNzon',
+'Bung KheNzon',
+'Cak KheNzon',
+'Gus KheNzon',
+'Ujang KheNzon',
+'Bro KheNzon',
+'Boss KheNzon',
+'Gan KheNzon',
+'Komandan KheNzon',
+'Mayor KheNzon',
+'Sultan KheNzon',
+'Chief KheNzon',
+'Captain KheNzon',
+'Kapten KheNzon',
+'Rmh KheNzon',
+'King KheNzon',
+'Bos KheNzon',
+'Om KheNzon',
+'Kaka KheNzon',
+'Mang KheNzon',
+'Ibu KheNzon',
+'Mamah KheNzon',
+'Ibu aa.KheNzon',
+'Tuan KheNzon',
+'KheNzon bos',
+'Juragan KheNzon',
+'Raja KheNzon',
+'Dewa KheNzon',
+'KheNzon boskie',
+'Pak KheNzon',
+'Jawara KheNzon',
+'KheNzon Slow',
+'KheNzon Bosku',
+'KheNzon Ngeri',
+'KheNzon Ceo',
+'KheNzon Bigbosss',
+'KheNzon Rajanya',
+'KheNzon Musk',
+'KheNzon Brayy',
+'KheNzon Man',
+'KheNzon Cak'
+].join('\n');
+    const DATA_DEFAULT_PATOKAN=['belakang nasi uduk','pandawa','belakang pom','rumah oren','pager hitam','gang di bawah pohon','rumah di gang','didalam pandawa','pandawa no 25','rumah lantai 2','rumah pager hitam'].join('\n');
+
+    renderTipeOptions();setSumber('offline');
+    autoTesGeo();
+    if(navigator.onLine&&document.getElementById('ckAutoSync').checked){syncDariPeta();}else{setSumber('offline');}
+  </script>
+</body>
+</html>
