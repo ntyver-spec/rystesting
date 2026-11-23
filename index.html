@@ -46,8 +46,15 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <label class="block">
             <span class="block text-xs font-semibold uppercase tracking-widest text-slate-500 mb-1.5">Kota / Wilayah (ketik atau pilih)</span>
-            <input type="text" id="inputKota" list="daftarKota" placeholder="mis. Solo, Ubud, Banda Aceh…" autocomplete="off"
-                   class="w-full rounded-xl border border-white/10 bg-white/[0.06] px-3 py-2.5 text-sm text-slate-100 placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-indigo-500/60 transition">
+            <div class="relative">
+              <input type="text" id="inputKota" placeholder="mis. Solo, Ubud, Banda Aceh…" autocomplete="off"
+                     class="w-full rounded-xl border border-white/10 bg-white/[0.06] px-3 py-2.5 pr-9 text-sm text-slate-100 placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-indigo-500/60 transition">
+              <button type="button" id="btnKotaToggle" tabindex="-1" title="Tampilkan daftar kota"
+                      class="absolute right-2 top-1/2 -translate-y-1/2 inline-flex items-center justify-center w-6 h-6 rounded-lg hover:bg-white/10 transition">
+                <img src="https://unpkg.com/lucide-static@1.44.0/icons/chevron-down.svg" alt="" class="w-3.5 h-3.5 invert opacity-60" onerror="this.style.display='none';">
+              </button>
+              <div id="panelKota" class="hidden absolute left-0 right-0 top-full mt-2 z-40 max-h-64 overflow-y-auto rounded-xl border border-white/10 bg-[#111726] shadow-2xl shadow-black/60 backdrop-blur-xl p-1.5"></div>
+            </div>
             <datalist id="daftarKota"></datalist>
             <p id="statusKotaCustom" class="mt-1 text-[11px] text-slate-500"></p>
           </label>
@@ -802,6 +809,30 @@ rumah pager hitam</textarea>
     }
 
     function buatLinkGoogleMaps(a){return(a.lat!=null&&a.lng!=null)?'https://www.google.com/maps/search/?api=1&query='+a.lat+','+a.lng:'https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(alamatPenuh(a));}
+	const PROVIDER_TELP = [
+  {prefix:'0811',nama:'Telkomsel'},{prefix:'0812',nama:'Telkomsel'},{prefix:'0813',nama:'Telkomsel'},
+  {prefix:'0821',nama:'Telkomsel'},{prefix:'0822',nama:'Telkomsel'},{prefix:'0823',nama:'Telkomsel'},
+  {prefix:'0852',nama:'Telkomsel'},{prefix:'0853',nama:'Telkomsel'},{prefix:'0851',nama:'Telkomsel'},
+  {prefix:'0814',nama:'Indosat'},{prefix:'0815',nama:'Indosat'},{prefix:'0816',nama:'Indosat'},
+  {prefix:'0855',nama:'Indosat'},{prefix:'0856',nama:'Indosat'},{prefix:'0857',nama:'Indosat'},{prefix:'0858',nama:'Indosat'},
+  {prefix:'0817',nama:'XL'},{prefix:'0818',nama:'XL'},{prefix:'0819',nama:'XL'},{prefix:'0859',nama:'XL'},
+  {prefix:'0877',nama:'XL'},{prefix:'0878',nama:'XL'},
+  {prefix:'0831',nama:'Axis'},{prefix:'0832',nama:'Axis'},{prefix:'0833',nama:'Axis'},{prefix:'0838',nama:'Axis'},
+  {prefix:'0895',nama:'Three'},{prefix:'0896',nama:'Three'},{prefix:'0897',nama:'Three'},{prefix:'0898',nama:'Three'},{prefix:'0899',nama:'Three'},
+  {prefix:'0881',nama:'Smartfren'},{prefix:'0882',nama:'Smartfren'},{prefix:'0883',nama:'Smartfren'},{prefix:'0884',nama:'Smartfren'},
+  {prefix:'0885',nama:'Smartfren'},{prefix:'0886',nama:'Smartfren'},{prefix:'0887',nama:'Smartfren'},{prefix:'0888',nama:'Smartfren'},{prefix:'0889',nama:'Smartfren'}
+];
+function buatTeleponUnik(teleponSet){
+  for(let c=0;c<1000;c++){
+    const prov=pick(PROVIDER_TELP);
+    const nomor=prov.prefix+rand(10000000,99999999);
+    const format=nomor;
+    if(!teleponSet.has(format)){teleponSet.add(format);return format;}
+  }
+  const prov=pick(PROVIDER_TELP);
+  const nomor=prov.prefix+rand(10000000,99999999);
+  return nomor.slice(0,4)+'-'+nomor.slice(4,8)+'-'+nomor.slice(8);
+}
     function buatItem(no,a){
       const li=document.createElement('li');li.className='relative flex gap-4 bg-white/[0.04] backdrop-blur-xl rounded-2xl ring-1 ring-white/10 px-5 py-4 transition hover:ring-indigo-500/40 hover:bg-white/[0.06]';
       const nomor=document.createElement('span');nomor.className='shrink-0 inline-flex items-center justify-center w-8 h-8 rounded-lg bg-indigo-500/15 ring-1 ring-indigo-500/30 text-indigo-300 text-xs font-black';nomor.textContent=String(no).padStart(2,'0');li.appendChild(nomor);
@@ -810,6 +841,7 @@ rumah pager hitam</textarea>
       if(a.patokan){const p=document.createElement('p');p.className='text-sm text-slate-400 leading-relaxed';p.textContent=a.patokan;isi.appendChild(p);}
       if(a.lat!=null){const k=document.createElement('p');k.className='text-[11px] font-mono text-slate-500';k.textContent='Koordinat: '+a.lat.toFixed(5)+', '+a.lng.toFixed(5);isi.appendChild(k);}
       const nama=document.createElement('p');nama.className='text-sm font-bold text-indigo-300 mt-0.5';nama.textContent=a.nama;isi.appendChild(nama);
+	  const teleponP=document.createElement('p');teleponP.className='text-sm text-slate-300 mt-0.5 font-mono';teleponP.textContent='📞 '+a.telepon;isi.appendChild(teleponP);
 
       // Baris aksi di BAWAH alamat: badge sumber + link Google Maps + tombol salin/tokopedia
       const aksi=document.createElement('div');aksi.className='flex flex-wrap items-center gap-2 mt-3 pt-3 border-t border-white/5';
@@ -821,7 +853,13 @@ rumah pager hitam</textarea>
 
       const grupAksi=document.createElement('div');grupAksi.className='ml-auto inline-flex items-center gap-1';
       const btnCopy=document.createElement('button');btnCopy.type='button';btnCopy.title='Salin';btnCopy.className='inline-flex items-center gap-1 text-xs font-semibold text-slate-500 hover:text-indigo-300 transition';btnCopy.innerHTML='<img src="https://unpkg.com/lucide-static@1.44.0/icons/copy.svg" alt="" class="w-3.5 h-3.5 invert opacity-70" onerror="this.style.display=\'none\';"><span class="label">Salin</span>';btnCopy.addEventListener('click',()=>salin(teksSingle(a),btnCopy));grupAksi.appendChild(btnCopy);
-      const btnTokopedia=document.createElement('button');
+	  const btnCopyTel=document.createElement('button');
+btnCopyTel.type='button';btnCopyTel.title='Salin nomor telepon';
+btnCopyTel.className='inline-flex items-center gap-1 text-xs font-semibold text-slate-500 hover:text-sky-300 transition';
+btnCopyTel.innerHTML='<img src="https://unpkg.com/lucide-static@1.44.0/icons/phone.svg" alt="" class="w-3.5 h-3.5 invert opacity-70" onerror="this.style.display=\'none\';"><span class="label">Telp</span>';
+btnCopyTel.addEventListener('click',()=>salin(a.telepon,btnCopyTel));
+grupAksi.appendChild(btnCopyTel);
+	  const btnTokopedia=document.createElement('button');
       btnTokopedia.type='button';
       btnTokopedia.title='Salin & buka Tambah Alamat Tokopedia';
       btnTokopedia.className='inline-flex items-center gap-1 text-xs font-semibold text-slate-500 hover:text-emerald-300 transition';
@@ -849,9 +887,87 @@ rumah pager hitam</textarea>
     const datalist=document.getElementById('daftarKota');
     CITIES.forEach(c=>{const o=document.createElement('option');o.value=c.nama;datalist.appendChild(o);});
     state.kotaTersimpan.forEach(k=>{const o=document.createElement('option');o.value=k.nama;datalist.appendChild(o);});
-    inputKota.value='Jakarta';
+        inputKota.value='Jakarta';
     inputKota.addEventListener('change',()=>terapkanKota(inputKota.value));
-    inputKota.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();terapkanKota(inputKota.value);}});
+    /* ===== Dropdown kota kustom: semua kota bisa di-scroll + input manual tetap jalan ===== */
+    const panelKota=document.getElementById('panelKota'),btnKotaToggle=document.getElementById('btnKotaToggle');
+    let indeksKotaAktif=-1,itemKotaAktif=[];
+    function daftarKotaSemua(){
+      const map=new Map();
+      CITIES.forEach(c=>map.set(c.nama,c.provinsi||''));
+      state.kotaTersimpan.forEach(k=>{if(!map.has(k.nama))map.set(k.nama,k.provinsi||'');});
+      [...datalist.options].forEach(o=>{if(o.value&&!map.has(o.value))map.set(o.value,'');});
+      return [...map.entries()].map(([nama,provinsi])=>({nama,provinsi})).sort((a,b)=>a.nama.localeCompare(b.nama,'id'));
+    }
+    function renderPanelKota(filter){
+      const q=(filter||'').trim().toLowerCase();
+      itemKotaAktif=daftarKotaSemua().filter(k=>!q||k.nama.toLowerCase().includes(q));
+      indeksKotaAktif=-1;panelKota.innerHTML='';
+      if(!itemKotaAktif.length){
+        const kosong=document.createElement('p');
+        kosong.className='px-3 py-2.5 text-[11px] leading-relaxed text-slate-500';
+        kosong.textContent='Tidak ada kota cocok. Tekan Enter untuk memakai "'+(filter||'').trim()+'" sebagai kota manual.';
+        panelKota.appendChild(kosong);return;
+      }
+      itemKotaAktif.forEach(k=>{
+        const btn=document.createElement('button');
+        btn.type='button';btn.dataset.nama=k.nama;
+        btn.className='w-full flex items-center gap-2 text-left px-3 py-2 rounded-lg text-sm text-slate-300 hover:bg-indigo-500/15 hover:text-white transition';
+        const nm=document.createElement('span');nm.className='flex-1 truncate';nm.textContent=k.nama;btn.appendChild(nm);
+        if(k.provinsi){const pr=document.createElement('span');pr.className='shrink-0 text-[10px] uppercase tracking-wider text-slate-500';pr.textContent=k.provinsi;btn.appendChild(pr);}
+        btn.addEventListener('mousedown',ev=>{ev.preventDefault();pilihKota(k.nama);});
+        panelKota.appendChild(btn);
+      });
+    }
+    function sesuaikanPosisiPanel(){
+      const r=inputKota.getBoundingClientRect();
+      const jarakBawah=window.innerHeight-r.bottom-16;
+      const jarakAtas=r.top-16;
+      const tinggiIdeal=Math.min(panelKota.scrollHeight||256,256);
+      const keAtas=jarakBawah<tinggiIdeal&&jarakAtas>jarakBawah;
+      panelKota.classList.toggle('top-full',!keAtas);
+      panelKota.classList.toggle('mt-2',!keAtas);
+      panelKota.classList.toggle('bottom-full',keAtas);
+      panelKota.classList.toggle('mb-2',keAtas);
+      const tersedia=keAtas?jarakAtas:jarakBawah;
+      panelKota.style.maxHeight=Math.max(120,Math.min(256,tersedia))+'px';
+    }
+    function bukaPanelKota(filter){
+      renderPanelKota(filter);
+      panelKota.classList.remove('hidden');
+      sesuaikanPosisiPanel();
+    }
+    function tutupPanelKota(){panelKota.classList.add('hidden');indeksKotaAktif=-1;}
+    function tandaiAktifKota(){
+      [...panelKota.querySelectorAll('button[data-nama]')].forEach((el,i)=>{
+        if(i===indeksKotaAktif){el.classList.add('bg-indigo-500/20','text-white');el.scrollIntoView({block:'nearest'});}
+        else el.classList.remove('bg-indigo-500/20','text-white');
+      });
+    }
+    function pilihKota(nama){inputKota.value=nama;tutupPanelKota();inputKota.dispatchEvent(new Event('change'));}
+    inputKota.addEventListener('focus',()=>bukaPanelKota(''));
+    inputKota.addEventListener('click',()=>{if(panelKota.classList.contains('hidden'))bukaPanelKota('');});
+    inputKota.addEventListener('input',()=>bukaPanelKota(inputKota.value));
+    inputKota.addEventListener('keydown',e=>{
+      const terbuka=!panelKota.classList.contains('hidden');
+      if(e.key==='ArrowDown'){e.preventDefault();if(!terbuka)bukaPanelKota(inputKota.value);if(!itemKotaAktif.length)return;indeksKotaAktif=Math.min(indeksKotaAktif+1,itemKotaAktif.length-1);tandaiAktifKota();}
+      else if(e.key==='ArrowUp'){e.preventDefault();if(!terbuka)bukaPanelKota(inputKota.value);if(!itemKotaAktif.length)return;indeksKotaAktif=Math.max(indeksKotaAktif-1,0);tandaiAktifKota();}
+      else if(e.key==='Escape'){tutupPanelKota();}
+      else if(e.key==='Enter'){
+        e.preventDefault();
+        if(terbuka&&indeksKotaAktif>=0&&itemKotaAktif[indeksKotaAktif])pilihKota(itemKotaAktif[indeksKotaAktif].nama);
+        else{pilihKota(inputKota.value.trim());}
+      }
+    });
+    btnKotaToggle.addEventListener('click',()=>{
+      if(panelKota.classList.contains('hidden')){inputKota.focus();bukaPanelKota('');}else tutupPanelKota();
+    });
+    document.addEventListener('mousedown',ev=>{
+      if(panelKota.contains(ev.target)||ev.target===inputKota||btnKotaToggle.contains(ev.target))return;
+      tutupPanelKota();
+    });
+	window.addEventListener('resize',tutupPanelKota);
+    window.addEventListener('scroll',()=>{if(!panelKota.classList.contains('hidden'))tutupPanelKota();},{passive:true});
 
     document.getElementById('btnSync').addEventListener('click',syncDariPeta);
     function getMode(){return document.querySelector('input[name="mode"]:checked').value;}
@@ -1127,6 +1243,7 @@ rumah pager hitam</textarea>
       }
       hasilTerakhir=[];daftarUl.innerHTML='';
       const digunakanSet=new Set();
+      const teleponSet=new Set();
 
       if(mode==='presisi'){
         btnGenerate.disabled=true;progresHasil.classList.remove('hidden');
@@ -1163,12 +1280,13 @@ rumah pager hitam</textarea>
               a=buatAlamatLengkap(p.jalan,daftarNama,daftarPatokan,p.src,tipeDipilih);
               if(p.lat!=null){a.lat=p.lat;a.lng=p.lng;}
             }
+            a.telepon=buatTeleponUnik(teleponSet);
             hasilTerakhir.push(a);daftarUl.appendChild(buatItem(i+1,a));
           }
         }catch(err){showError('Gagal memproses alamat nyata: '+err.message+' — coba lagi, atau gunakan mode Sintesis.');btnGenerate.disabled=false;progresHasil.classList.add('hidden');return;}
         finally{btnGenerate.disabled=false;progresHasil.classList.add('hidden');}
       }else{
-        for(let i=0;i<jumlah;i++){const a=generateAlamatSintesis(daftarNama,daftarPatokan,tipeDipilih,digunakanSet);hasilTerakhir.push(a);daftarUl.appendChild(buatItem(i+1,a));}
+        for(let i=0;i<jumlah;i++){const a=generateAlamatSintesis(daftarNama,daftarPatokan,tipeDipilih,digunakanSet);a.telepon=buatTeleponUnik(teleponSet);hasilTerakhir.push(a);daftarUl.appendChild(buatItem(i+1,a));}
       }
 
       const sumberLabel=labelHasil(hasilTerakhir);
