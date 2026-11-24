@@ -83,9 +83,16 @@
         <p id="statusSumberAktif" class="text-[11px] font-semibold text-slate-400"></p>
 
                 <div class="rounded-xl ring-1 ring-sky-500/30 bg-sky-500/[0.04] p-3.5 space-y-3">
-          <div class="flex items-center gap-2">
+             <div class="flex items-center gap-2">
             <label class="text-[11px] font-bold uppercase tracking-widest text-slate-500 shrink-0">Provider</label>
-            <select id="pilihProvider" class="flex-1 rounded-lg border border-white/10 bg-[#111726] px-2.5 py-1.5 text-xs font-semibold text-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-500/50 transition"></select>
+            <div class="relative flex-1">
+              <button type="button" id="btnPilihProvider"
+                      class="w-full flex items-center gap-2 rounded-lg border border-white/10 bg-[#111726] px-2.5 py-1.5 text-xs font-semibold text-slate-200 hover:border-sky-500/50 focus:outline-none focus:ring-2 focus:ring-sky-500/50 transition">
+                <span id="teksProvider" class="flex-1 text-left truncate">Geoapify</span>
+                <img src="https://unpkg.com/lucide-static@1.44.0/icons/chevron-down.svg" alt="" class="w-3.5 h-3.5 invert opacity-60" onerror="this.style.display='none';">
+              </button>
+              <div id="panelProvider" class="hidden absolute left-0 right-0 top-full mt-1.5 z-40 max-h-56 overflow-y-auto rounded-xl border border-white/10 bg-[#111726] shadow-2xl shadow-black/60 backdrop-blur-xl p-1.5"></div>
+            </div>
           </div>
           <div class="relative">
             <input type="password" id="inputKeyProvider" placeholder="Tempel API key" autocomplete="off"
@@ -1042,7 +1049,7 @@ grupAksi.appendChild(btnCopyTel);
       throw errTerakhir||new Error('Semua key gagal');
     }
 
-    const pilihProvider=document.getElementById('pilihProvider'),
+    const btnPilihProvider=document.getElementById('btnPilihProvider'),panelProvider=document.getElementById('panelProvider'),teksProvider=document.getElementById('teksProvider'),
           inputKeyProvider=document.getElementById('inputKeyProvider'),
           statusKeyProvider=document.getElementById('statusKeyProvider'),
           hintProvider=document.getElementById('hintProvider'),
@@ -1174,15 +1181,39 @@ grupAksi.appendChild(btnCopyTel);
     }
 
     /* ---------- UI key ---------- */
+       function tutupPanelProvider(){panelProvider.classList.add('hidden');}
     function renderPilihProvider(){
-      pilihProvider.innerHTML='';
+      teksProvider.textContent=labelProvider(providerDipilih);
+      panelProvider.innerHTML='';
       URUTAN_PROVIDER.forEach(id=>{
-        const o=document.createElement('option');
-        o.value=id;
-        o.textContent=labelProvider(id)+(butuhKey(id)?(kunciProvider[id]?' ✓':' — belum ada key'):' (tanpa key)');
-        pilihProvider.appendChild(o);
+        const aktif=id===providerDipilih;
+        const btn=document.createElement('button');
+        btn.type='button';
+        btn.className='w-full flex items-center gap-2 text-left px-2.5 py-2 rounded-lg text-xs transition '
+          +(aktif
+            ? 'bg-indigo-500/20 text-white font-bold'
+            : 'text-slate-300 font-semibold hover:bg-indigo-500/15 hover:text-white');
+        const nm=document.createElement('span');
+        nm.className='flex-1 truncate';
+        nm.textContent=labelProvider(id);
+        btn.appendChild(nm);
+        const ket=document.createElement('span');
+        ket.className='shrink-0 text-[10px] uppercase tracking-wider '
+          +(butuhKey(id)
+            ? (kunciProvider[id]?'text-emerald-400/80':'text-amber-400/70')
+            : 'text-slate-500');
+        ket.textContent=butuhKey(id)?(kunciProvider[id]?'aktif':'—'):'gratis';
+        btn.appendChild(ket);
+        btn.addEventListener('click',()=>{
+          providerDipilih=id;
+          tulisLS('rys_provider',id);
+          tutupPanelProvider();
+          renderStatusProvider();
+          updateBadge();
+          autoTestProvider();
+        });
+        panelProvider.appendChild(btn);
       });
-      pilihProvider.value=providerDipilih;
     }
     function maskKey(k){
       if(!k)return '';
@@ -1231,13 +1262,20 @@ grupAksi.appendChild(btnCopyTel);
       renderPilihProvider();
     }
 
-    pilihProvider.addEventListener('change',()=>{
-      providerDipilih=pilihProvider.value;
-      tulisLS('rys_provider',providerDipilih);
-      renderStatusProvider();
-      updateBadge();
-      autoTestProvider();
+     btnPilihProvider.addEventListener('click',()=>{
+      if(panelProvider.classList.contains('hidden')){
+        renderPilihProvider();
+        panelProvider.classList.remove('hidden');
+      }else{
+        tutupPanelProvider();
+      }
     });
+    document.addEventListener('mousedown',ev=>{
+      if(panelProvider.contains(ev.target)||btnPilihProvider.contains(ev.target))return;
+      tutupPanelProvider();
+    });
+    window.addEventListener('scroll',()=>{if(!panelProvider.classList.contains('hidden'))tutupPanelProvider();},{passive:true});
+    window.addEventListener('resize',tutupPanelProvider);
     btnTampilkanKey.addEventListener('click',()=>{
       keyVisible=!keyVisible;
       inputKeyProvider.type=keyVisible?'text':'password';
