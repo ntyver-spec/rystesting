@@ -82,62 +82,27 @@
 
         <p id="statusSumberAktif" class="text-[11px] font-semibold text-slate-400"></p>
 
-        <!-- Geoapify panel -->
-        <details id="panelGeoapify" class="group rounded-xl ring-1 ring-sky-500/30 bg-sky-500/[0.04] open:bg-sky-500/[0.06]">
-          <summary class="flex items-center gap-2 cursor-pointer list-none px-3.5 py-2.5 text-xs font-bold text-sky-300 hover:text-sky-200 transition select-none">
-            <img src="https://unpkg.com/lucide-static@1.44.0/icons/key.svg" alt="" class="w-3.5 h-3.5 invert opacity-70" onerror="this.style.display='none';">
-            <span class="flex-1">Geoapify API — (disarankan)</span>
-            <img src="https://unpkg.com/lucide-static@1.44.0/icons/chevron-down.svg" alt="" class="w-3.5 h-3.5 invert opacity-60 transition group-open:rotate-180" onerror="this.style.display='none';">
-          </summary>
-          <div class="px-3.5 pb-4 space-y-3 border-t border-white/5 pt-3">
-            <div class="flex items-center justify-between gap-2">
-              <p class="text-[11px] leading-relaxed text-slate-500">Daftar gratis di <b class="text-sky-300">myprojects.geoapify.com</b>.</p>
-              <button type="button" id="btnGunakanTersedia" title="Aktifkan / nonaktifkan key tersedia"
-                      class="shrink-0 inline-flex items-center gap-1 text-[11px] font-semibold text-indigo-300 bg-indigo-500/15 ring-1 ring-indigo-500/30 rounded-full px-2.5 py-1 hover:bg-indigo-500/25 transition disabled:opacity-50 disabled:cursor-not-allowed">
-                Gunakan key tersedia
-              </button>
-            </div>
-            <div class="relative">
-              <input type="password" id="inputKeyGeoapify" placeholder="Tempel Geoapify API key" autocomplete="off"
-                     class="w-full rounded-xl border border-white/10 bg-white/[0.04] px-3.5 py-2.5 pr-11 text-sm text-slate-100 placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-sky-500/50 transition">
-              <button type="button" id="btnTampilkanGeo" title="Tampilkan / sembunyikan key"
-                      class="absolute right-2 top-1/2 -translate-y-1/2 inline-flex items-center justify-center w-7 h-7 rounded-lg hover:bg-white/10 transition">
-                <img id="ikonMataGeo" src="https://unpkg.com/lucide-static@1.44.0/icons/eye.svg" alt="" class="w-4 h-4 invert opacity-70">
-              </button>
-            </div>
-            <div class="flex flex-wrap items-center gap-2">
-              <button type="button" id="btnSimpanKeyGeo" class="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-300 bg-emerald-500/10 ring-1 ring-emerald-500/30 rounded-lg px-3 py-1.5 hover:bg-emerald-500/20 transition">Simpan Key</button>
-              <button type="button" id="btnTesKeyGeo" class="inline-flex items-center gap-1.5 text-xs font-bold text-sky-300 bg-sky-500/15 ring-1 ring-sky-500/30 rounded-lg px-3 py-1.5 hover:bg-sky-500/25 transition disabled:opacity-50 disabled:cursor-not-allowed">Tes Key</button>
-              <button type="button" id="btnHapusKeyGeo" class="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-400 ring-1 ring-white/10 rounded-lg px-3 py-1.5 hover:text-rose-400 hover:ring-rose-500/40 transition">Hapus Key</button>
-              <span id="statusKeyGeo" class="text-[11px] text-slate-500"></span>
-            </div>
-            <p id="keyTersimpanGeo" class="text-[11px] font-mono break-all text-slate-500"></p>
+                <div class="rounded-xl ring-1 ring-sky-500/30 bg-sky-500/[0.04] p-3.5 space-y-3">
+          <div class="flex items-center gap-2">
+            <label class="text-[11px] font-bold uppercase tracking-widest text-slate-500 shrink-0">Provider</label>
+            <select id="pilihProvider" class="flex-1 rounded-lg border border-white/10 bg-[#111726] px-2.5 py-1.5 text-xs font-semibold text-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-500/50 transition"></select>
           </div>
-        </details>
-
-        <!-- Google panel -->
-        <details id="panelGoogle" class="group rounded-xl ring-1 ring-white/10 bg-white/[0.02]">
-          <summary class="flex items-center gap-2 cursor-pointer list-none px-3.5 py-2.5 text-xs font-bold text-slate-400 hover:text-indigo-300 transition select-none">
-            <img src="https://unpkg.com/lucide-static@1.44.0/icons/map-pin.svg" alt="" class="w-3.5 h-3.5 invert opacity-70" onerror="this.style.display='none';">
-            <span class="flex-1">Google Maps API (opsional)</span>
-            <img src="https://unpkg.com/lucide-static@1.44.0/icons/chevron-down.svg" alt="" class="w-3.5 h-3.5 invert opacity-60 transition group-open:rotate-180" onerror="this.style.display='none';">
-          </summary>
-          <div class="px-3.5 pb-4 space-y-3 border-t border-white/5 pt-3">
-            <p class="text-[11px] leading-relaxed text-slate-500">Daftar &amp; aktifkan Geocoding API di console.cloud.google.com.</p>
-            <div class="relative">
-              <input type="password" id="inputKeyGoogle" placeholder="Tempel Google Geocoding API key (AIza…)" autocomplete="off" class="w-full rounded-xl border border-white/10 bg-white/[0.04] px-3.5 py-2.5 pr-11 text-sm text-slate-100 placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition">
-              <button type="button" id="btnTampilkanGoogle" title="Tampilkan / sembunyikan key" class="absolute right-2 top-1/2 -translate-y-1/2 inline-flex items-center justify-center w-7 h-7 rounded-lg hover:bg-white/10 transition">
-                <img id="ikonMataGoogle" src="https://unpkg.com/lucide-static@1.44.0/icons/eye.svg" alt="" class="w-4 h-4 invert opacity-70">
-              </button>
-            </div>
-            <div class="flex flex-wrap items-center gap-2">
-              <button type="button" id="btnSimpanKey" class="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-300 bg-emerald-500/10 ring-1 ring-emerald-500/30 rounded-lg px-3 py-1.5 hover:bg-emerald-500/20 transition">Simpan Key</button>
-              <button type="button" id="btnTesKey" class="inline-flex items-center gap-1.5 text-xs font-bold text-indigo-300 bg-indigo-500/15 ring-1 ring-indigo-500/30 rounded-lg px-3 py-1.5 hover:bg-indigo-500/25 transition disabled:opacity-50 disabled:cursor-not-allowed">Tes Key</button>
-              <button type="button" id="btnHapusKey" class="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-400 ring-1 ring-white/10 rounded-lg px-3 py-1.5 hover:text-rose-400 hover:ring-rose-500/40 transition">Hapus Key</button>
-              <span id="statusKey" class="text-[11px] text-slate-500"></span>
-            </div>
-            <p id="keyTersimpanGoogle" class="text-[11px] font-mono break-all text-slate-500"></p>
+          <div class="relative">
+            <input type="password" id="inputKeyProvider" placeholder="Tempel API key" autocomplete="off"
+                   class="w-full rounded-xl border border-white/10 bg-white/[0.04] px-3.5 py-2.5 pr-11 text-sm text-slate-100 placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-sky-500/50 transition">
+            <button type="button" id="btnTampilkanKey" title="Tampilkan / sembunyikan key"
+                    class="absolute right-2 top-1/2 -translate-y-1/2 inline-flex items-center justify-center w-7 h-7 rounded-lg hover:bg-white/10 transition">
+              <img id="ikonMataKey" src="https://unpkg.com/lucide-static@1.44.0/icons/eye.svg" alt="" class="w-4 h-4 invert opacity-70">
+            </button>
           </div>
+			<div id="barisAksiKey" class="hidden flex flex-wrap items-center gap-2">
+            <button type="button" id="btnSimpanKeyProvider" class="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-300 bg-emerald-500/10 ring-1 ring-emerald-500/30 rounded-lg px-3 py-1.5 hover:bg-emerald-500/20 transition">Simpan Key</button>
+            <button type="button" id="btnTesKeyProvider" class="inline-flex items-center gap-1.5 text-xs font-bold text-sky-300 bg-sky-500/15 ring-1 ring-sky-500/30 rounded-lg px-3 py-1.5 hover:bg-sky-500/25 transition disabled:opacity-50 disabled:cursor-not-allowed">Tes Key</button>
+            <button type="button" id="btnHapusKeyProvider" class="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-400 ring-1 ring-white/10 rounded-lg px-3 py-1.5 hover:text-rose-400 hover:ring-rose-500/40 transition">Hapus Key</button>
+          </div>
+          <p id="statusKeyProvider" class="text-[11px] text-slate-500"></p>
+          <p id="hintProvider" class="text-[11px] leading-relaxed text-slate-500"></p>
+        </div>
         </details>
       </fieldset>
 
@@ -285,7 +250,21 @@ rumah pager hitam</textarea>
     const parseList=str=>str.split('\n').map(s=>s.trim()).filter(Boolean);
     const bersihkanJalan=n=>n.replace(/^Jalan\s+/i,'').replace(/^Jl\.?\s*/i,'').replace(/^Jln\.?\s*/i,'').replace(/^Jln\s+/i,'').trim();
 
-    async function fetchJSON(url,ms=12000,opts={}){const c=new AbortController();const t=setTimeout(()=>c.abort(),ms);try{const r=await fetch(url,{signal:c.signal,headers:{Accept:'application/json'},...opts});if(!r.ok)throw new Error('HTTP '+r.status);return await r.json();}finally{clearTimeout(t);}}
+    async function fetchJSON(url,ms=12000,opts={}){
+      const c=new AbortController();
+      const t=setTimeout(()=>c.abort(),ms);
+      try{
+        const r=await fetch(url,{signal:c.signal,headers:{Accept:'application/json'},...opts});
+        if(!r.ok){
+          let detail='';
+          try{detail=await r.text();}catch(e){}
+          const err=new Error('HTTP '+r.status+(detail?' — '+String(detail).slice(0,200):''));
+          err.status=r.status;
+          throw err;
+        }
+        return await r.json();
+      }finally{clearTimeout(t);}
+    }
     function jsonp(url){return new Promise((res,rej)=>{const cb='rys_cb_'+Math.floor(Math.random()*1e9);window[cb]=d=>{delete window[cb];const s=document.getElementById('jsonp_script');if(s)s.remove();res(d);};const s=document.createElement('script');s.id='jsonp_script';s.src=url+'&callback='+cb;s.onerror=()=>{delete window[cb];if(s.parentNode)s.parentNode.removeChild(s);rej(new Error('Gagal memuat skrip'));};document.body.appendChild(s);});}
 
     const GLOBAL_JALAN=['Jend. Sudirman','M.H. Thamrin','Jend. Gatot Subroto','H.R. Rasuna Said','Jend. A. Yani','Diponegoro','Imam Bonjol','Teuku Umar','Gajah Mada','Hayam Wuruk','Ahmad Yani','Pahlawan','Juanda','Cempaka','Flamboyan','Kenanga','Melati','Anggrek','Bougenville','Begonia','Perjuangan','Pemuda'];
@@ -406,17 +385,19 @@ rumah pager hitam</textarea>
       {id:'villa',label:'Vila'}
     ];
 
+           /* Hanya kategori yang pasti ada di Geoapify Places API v2.
+       Dibuat minimal per tipe supaya union-nya tidak melebihi batas. */
     function kategoriPOIUntukTipe(t){
       switch(t){
-        case 'jalan':return 'commercial,catering,accommodation,building,amenity';
-        case 'perumahan':return 'building.residential,place.neighbourhood,landuse.residential';
+        case 'jalan':return 'commercial,catering,accommodation';
+        case 'perumahan':return 'building.residential';
         case 'komplek':return 'commercial,building.commercial';
-        case 'cluster':return 'place.neighbourhood,landuse.residential,building.residential';
+        case 'cluster':return 'building.residential';
         case 'residens':return 'building.residential,accommodation.apartment';
-        case 'griya':return 'building.residential,place.neighbourhood';
-        case 'puri':return 'building.residential,place.neighbourhood';
-        case 'villa':return 'accommodation.villa,building.residential';
-        default:return 'building.residential,commercial,catering';
+        case 'griya':return 'building.residential';
+        case 'puri':return 'building.residential';
+        case 'villa':return 'accommodation';
+        default:return 'building.residential';
       }
     }
 
@@ -465,47 +446,39 @@ rumah pager hitam</textarea>
       return false;
     }
 
-    function setSumber(kunci,teksOverride){
-      const map={offline:{cls:'text-slate-300 bg-white/[0.05] ring-white/10',icon:'database',teks:'Offline · data bawaan'},syncing:{cls:'text-amber-300 bg-amber-500/10 ring-amber-500/30',icon:'refresh-cw',teks:'Sinkronisasi…'},osm:{cls:'text-emerald-300 bg-emerald-500/10 ring-emerald-500/30',icon:'globe',teks:'Online · OpenStreetMap'},geoapify:{cls:'text-sky-300 bg-sky-500/10 ring-sky-500/30',icon:'globe',teks:'Online · Geoapify'},google:{cls:'text-indigo-300 bg-indigo-500/10 ring-indigo-500/30',icon:'map-pin',teks:'Online · Google Maps'}};
+        function setSumber(kunci,teksOverride){
+      const map={
+        offline:{cls:'text-slate-300 bg-white/[0.05] ring-white/10',icon:'database',teks:'Offline · data bawaan'},
+        syncing:{cls:'text-amber-300 bg-amber-500/10 ring-amber-500/30',icon:'refresh-cw',teks:'Sinkronisasi…'},
+        osm:{cls:'text-emerald-300 bg-emerald-500/10 ring-emerald-500/30',icon:'globe',teks:'Online · OpenStreetMap'},
+        photon:{cls:'text-teal-300 bg-teal-500/10 ring-teal-500/30',icon:'globe',teks:'Online · Photon'},
+        geoapify:{cls:'text-sky-300 bg-sky-500/10 ring-sky-500/30',icon:'globe',teks:'Online · Geoapify'},
+        google:{cls:'text-indigo-300 bg-indigo-500/10 ring-indigo-500/30',icon:'map-pin',teks:'Online · Google Maps'},
+        locationiq:{cls:'text-violet-300 bg-violet-500/10 ring-violet-500/30',icon:'globe',teks:'Online · LocationIQ'}
+      };
       const o=map[kunci]||map.offline;const badge=document.getElementById('badgeSumber');
       badge.className='inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-widest rounded-full px-3.5 py-1.5 backdrop-blur-xl select-none ring-1 '+o.cls;
       badge.innerHTML='<img src="https://unpkg.com/lucide-static@1.44.0/icons/'+o.icon+'.svg" alt="" class="w-3.5 h-3.5 invert opacity-80" onerror="this.style.display=\'none\';"><span>'+(teksOverride||o.teks)+'</span>';
     }
-
     function updateBadge(){
       const mode=getMode();
-      if(mode==='sintesis'){
-        setSumber('offline');
-      } else if(state.geoApifyEnabled && state.geoApifyValid){
-        setSumber('geoapify');
-      } else if(state.googleKey){
-        setSumber('google');
-      } else {
-        setSumber('osm');
-      }
+      if(mode==='sintesis'){setSumber('offline');}
+      else if(typeof providerDipilih!=='undefined'){
+        const id=providerDipilih;
+        if(butuhKey(id)&&!keyAktif(id))setSumber('osm');
+        else if(PROVIDER_INFO[id])setSumber(id);
+        else setSumber('osm');
+      }else{setSumber('osm');}
       updateIndikatorUI();
     }
-
     function updateIndikatorUI(){
       const mode=getMode();
       const statusEl=document.getElementById('statusSumberAktif');
-      const panelG=document.getElementById('panelGeoapify');
-      const panelL=document.getElementById('panelGoogle');
-      [panelG,panelL].forEach(el=>{
-        if(!el)return;
-        el.classList.remove('ring-emerald-400/50','bg-emerald-500/[0.06]','ring-indigo-400/50','bg-indigo-500/[0.06]');
-      });
       let aktif='—';
       if(mode==='sintesis'){
         aktif='Data lokal (offline)';
-      } else if(state.geoApifyEnabled && state.geoApifyValid){
-        aktif='Geoapify';
-        if(panelG)panelG.classList.add('ring-emerald-400/50','bg-emerald-500/[0.06]');
-      } else if(state.googleKey){
-        aktif='Google Maps';
-        if(panelL)panelL.classList.add('ring-indigo-400/50','bg-indigo-500/[0.06]');
-      } else {
-        aktif='OpenStreetMap';
+      }else if(typeof providerDipilih!=='undefined'){
+        aktif=labelProvider(providerDipilih)+((butuhKey(providerDipilih)&&!keyAktif(providerDipilih))?' (tanpa key → Photon/OSM)':'');
       }
       if(statusEl)statusEl.textContent='Sumber aktif saat ini: '+aktif;
     }
@@ -538,16 +511,33 @@ rumah pager hitam</textarea>
 
     function buatBarisAlamat(tipe,jalan){
       const no=rand(1,250),blok=hurufBlok(),arahan=pick(['Barat','Timur','Utara','Selatan']);
+      const jl=pick(['Jl.','JL.','Jln.','Jalan']);
+      const gg=pick(['Gg.','GG.','Gang']);
       switch(tipe){
-        case 'jalan':return rand(1,2)===1?`Jl. ${jalan} No. ${no}`:`Jl. ${jalan} Gang ${pick(GANG)} No. ${no}`;
-        case 'perumahan':return `Perum ${pick(PERUM)} ${jalan} Blok ${blok}-${no}`;
-        case 'komplek':return rand(1,2)===1?`Komplek ${pick(KOMPLEK)} Boulevard Blok ${blok}${rand(1,9)}/${arahan} No. ${no}`:`Komplek ${pick(KOMPLEK)} ${jalan} Blok ${blok}-${no}`;
-        case 'cluster':return `Cluster ${pick(CLUSTER)} ${jalan} Blok ${blok}-${no}`;
-        case 'residens':return rand(1,2)===1?`Residence ${pick(VILLA)} ${jalan} No. ${no}`:`Apartemen ${pick(KOMPLEK)} ${jalan} No. ${no}`;
-        case 'griya':return `Griya ${pick(GRIYA)} ${jalan} Blok ${blok}-${no}`;
-        case 'puri':return `Puri ${pick(PURI)} ${jalan} Blok ${blok}-${no}`;
-        case 'villa':return `Villa ${pick(VILLA)} ${jalan} No. ${no}`;
-        default:return `Jl. ${jalan} No. ${no}`;
+        case 'jalan':
+          return rand(1,2)===1
+            ? `${jl} ${jalan} No. ${no}`
+            : `${jl} ${jalan} ${gg} ${pick(GANG)} No. ${no}`;
+        case 'perumahan':
+          return `${pick(['Perum','Perumahan'])} ${pick(PERUM)} ${jalan} Blok ${blok}-${no}`;
+        case 'komplek':
+          return rand(1,2)===1
+            ? `Komplek ${pick(KOMPLEK)} Boulevard Blok ${blok}${rand(1,9)}/${arahan} No. ${no}`
+            : `Komp. ${pick(KOMPLEK)} ${jalan} Blok ${blok}-${no}`;
+        case 'cluster':
+          return `Cluster ${pick(CLUSTER)} ${jalan} Blok ${blok}-${no}`;
+        case 'residens':
+          return rand(1,2)===1
+            ? `Residence ${pick(VILLA)} ${jalan} No. ${no}`
+            : `Apartemen ${pick(KOMPLEK)} ${jalan} No. ${no}`;
+        case 'griya':
+          return `Griya ${pick(GRIYA)} ${jalan} Blok ${blok}-${no}`;
+        case 'puri':
+          return `Puri ${pick(PURI)} ${jalan} Blok ${blok}-${no}`;
+        case 'villa':
+          return `Villa ${pick(VILLA)} ${jalan} No. ${no}`;
+        default:
+          return `${jl} ${jalan} No. ${no}`;
       }
     }
 
@@ -684,33 +674,39 @@ rumah pager hitam</textarea>
       return null;
     }
     async function ambilJalanDenganFallback(){
-      const list=[];
-      if(state.geoApifyEnabled && state.geoApifyValid) list.push('geoapify');
-      if(state.googleKey) list.push('google');
-      list.push('osm');
-      for(const prov of list){
-        const res=prov==='geoapify'?await ambilJalanGeoapify():prov==='google'?await ambilJalanGoogle():await ambilJalanOSM();
-        if(res) return res;
+      const tambahan=butuhKey(providerDipilih)
+        ? URUTAN_PROVIDER.filter(id=>id!==providerDipilih&&id!=='photon'&&id!=='osm'&&kunciProvider[id])
+        : [];
+      const rantai=[providerDipilih].concat(tambahan).concat(['photon','osm'])
+        .filter((id,i,arr)=>arr.indexOf(id)===i);
+      for(const id of rantai){
+        if(butuhKey(id)&&!keyAktif(id))continue;
+        try{
+          const p=titikAcakDalamRadius(getCity());
+          const r=await reverseProvider(id,p.lat,p.lng);
+          if(r&&r.jalan)return {jalan:r.jalan,lat:p.lat,lng:p.lng,src:'Peta · '+labelProvider(id),provider:id};
+        }catch(e){
+          if(id==='osm')break;
+        }
+        if(id==='osm')await sleep(1000);
+        else if(id==='locationiq')await sleep(550);
+        else await sleep(150);
       }
-      return {jalan:pick(poolJalan()), lat:null, lng:null, src:'Fallback lokal'};
+      return {jalan:pick(poolJalan()),lat:null,lng:null,src:'Fallback lokal',provider:null};
     }
 
     async function geocodeKota(nama){
-      if(state.geoApifyEnabled && state.geoApifyValid){
-        try{
-          const r=await fetch('https://api.geoapify.com/v1/geocode/search?text='+encodeURIComponent(nama+', Indonesia')+'&lang=id&limit=1&apiKey='+encodeURIComponent(state.geoApifyKey));
-          if(!r.ok) return null;
-          const j=await r.json();
-          const f=j.features&&j.features[0];if(!f)return null;
-          const p=f.properties;return{lat:p.lat,lon:p.lon,nama:p.city||p.county||p.state||nama,provinsi:p.state||'Indonesia'};
-        }catch(e){return null;}
-      }else{
-        try{
-          const j=await fetchJSON('https://nominatim.openstreetmap.org/search?format=jsonv2&q='+encodeURIComponent(nama+' Indonesia')+'&countrycodes=id&limit=1');
-          if(j.length){const p=j[0];return{lat:+p.lat,lon:+p.lon,nama:nama,provinsi:'Indonesia'};}
-        }catch(e){}
-        return null;
+      const tambahan=butuhKey(providerDipilih)
+        ? URUTAN_PROVIDER.filter(id=>id!==providerDipilih&&id!=='photon'&&id!=='osm'&&kunciProvider[id])
+        : [];
+      const rantai=[providerDipilih].concat(tambahan).concat(['photon','osm'])
+        .filter((id,i,arr)=>arr.indexOf(id)===i);
+      for(const id of rantai){
+        if(butuhKey(id)&&!keyAktif(id))continue;
+        const info=await cariKotaProvider(id,nama);
+        if(info)return info;
       }
+      return null;
     }
     function buatKotaCustom(info){return{id:'custom',nama:info.nama,provinsi:info.provinsi,pusat:[info.lat,info.lon],radiusM:5000,jalan:GLOBAL_JALAN.slice(0,8),kecamatan:[]};}
 
@@ -841,6 +837,12 @@ function buatTeleponUnik(teleponSet){
       if(a.patokan){const p=document.createElement('p');p.className='text-sm text-slate-400 leading-relaxed';p.textContent=a.patokan;isi.appendChild(p);}
       if(a.lat!=null){const k=document.createElement('p');k.className='text-[11px] font-mono text-slate-500';k.textContent='Koordinat: '+a.lat.toFixed(5)+', '+a.lng.toFixed(5);isi.appendChild(k);}
       const nama=document.createElement('p');nama.className='text-sm font-bold text-indigo-300 mt-0.5';nama.textContent=a.nama;isi.appendChild(nama);
+	  if(a.poi){
+        const poiP=document.createElement('p');
+        poiP.className='text-[11px] text-sky-300/80 mt-0.5';
+        poiP.textContent='Tempat: '+a.poi;
+        isi.appendChild(poiP);
+      }
 	  const teleponP=document.createElement('p');teleponP.className='text-sm text-slate-300 mt-0.5 font-mono';teleponP.textContent='📞 '+a.telepon;isi.appendChild(teleponP);
 
       // Baris aksi di BAWAH alamat: badge sumber + link Google Maps + tombol salin/tokopedia
@@ -976,247 +978,356 @@ grupAksi.appendChild(btnCopyTel);
       updateBadge();
     });});
 
-    // ================= GEOAPIFY KEY (tersedia + manual) =================
-    const inputKeyGeoapify=document.getElementById('inputKeyGeoapify'),statusKeyGeo=document.getElementById('statusKeyGeo'),keyTersimpanGeo=document.getElementById('keyTersimpanGeo'),btnHapusKeyGeo=document.getElementById('btnHapusKeyGeo'),btnGunakanTersedia=document.getElementById('btnGunakanTersedia'),btnTesKeyGeo=document.getElementById('btnTesKeyGeo'),btnTampilkanGeo=document.getElementById('btnTampilkanGeo'),ikonMataGeo=document.getElementById('ikonMataGeo');
-
-    let geoVisible=false;
-    btnTampilkanGeo.addEventListener('click',()=>{
-      geoVisible=!geoVisible;
-      inputKeyGeoapify.type=geoVisible?'text':'password';
-      ikonMataGeo.src='https://unpkg.com/lucide-static@1.44.0/icons/'+(geoVisible?'eye-off':'eye')+'.svg';
-    });
-
-    function labelKeyBerjalan(){
-      if(state.geoApifyManual)return 'manual';
-      const idx=KEYS_GEOPIFY_DEFAULT.indexOf(state.geoApifyKey);
-      return idx>=0?'tersedia #'+(idx+1):'tersedia';
+        /* ================= PROVIDER + KEY (satu kolom) ================= */
+     const DEFAULT_KEYS={
+      /* isi dua-duanya; urutan = urutan percobaan */
+      geoapify:[
+        'f583a21ddfc94c699cd6bc73d4e136ff',   /* key Geoapify #1 */
+        'bcc0dec9988642e89e3478574ceecb21'    /* key Geoapify #2 */
+      ],
+      google:'',
+      locationiq:'pk.61c4a91b61a65a2335719c84d9810a67'
+    };
+    const PROVIDER_INFO={
+      geoapify:{label:'Geoapify',butuhKey:true,daftar:'myprojects.geoapify.com'},
+      google:{label:'Google Maps',butuhKey:true,daftar:'console.cloud.google.com'},
+      locationiq:{label:'LocationIQ',butuhKey:true,daftar:'locationiq.com'},
+      photon:{label:'Photon',butuhKey:false},
+      osm:{label:'OpenStreetMap',butuhKey:false}
+    };
+    const URUTAN_PROVIDER=['geoapify','google','locationiq','photon','osm'];
+    let providerDipilih=bacaLS('rys_provider','geoapify');
+    if(!PROVIDER_INFO[providerDipilih])providerDipilih='geoapify';
+        function pecahKeys(v){
+      if(Array.isArray(v))return v.map(s=>String(s||'').trim()).filter(Boolean);
+      return String(v||'').split(/[\s,;]+/).map(s=>s.trim()).filter(Boolean);
     }
-
-    function updateTombolTersedia(){
-      if(state.geoApifyEnabled && !state.geoApifyManual){
-        btnGunakanTersedia.className='shrink-0 inline-flex items-center gap-1 text-[11px] font-semibold text-emerald-300 bg-emerald-500/15 ring-1 ring-emerald-500/40 rounded-full px-2.5 py-1 hover:bg-emerald-500/25 transition disabled:opacity-50 disabled:cursor-not-allowed';
-        btnGunakanTersedia.textContent='✓ Key tersedia ON';
+    const daftarKey={},indeksKey={},kunciProvider={},sumberKey={};
+    URUTAN_PROVIDER.forEach(id=>{
+      const dariLS=bacaLS('rys_keys_'+id,'');
+      if(dariLS){
+        daftarKey[id]=pecahKeys(dariLS);
+        sumberKey[id]='manual';
       }else{
-        btnGunakanTersedia.className='shrink-0 inline-flex items-center gap-1 text-[11px] font-semibold text-indigo-300 bg-indigo-500/15 ring-1 ring-indigo-500/30 rounded-full px-2.5 py-1 hover:bg-indigo-500/25 transition disabled:opacity-50 disabled:cursor-not-allowed';
-        btnGunakanTersedia.textContent='Gunakan key tersedia';
+        daftarKey[id]=pecahKeys(DEFAULT_KEYS[id]);
+        sumberKey[id]=daftarKey[id].length?'bawaan':'kosong';
       }
+      indeksKey[id]=0;
+    });
+    function sinkronKunci(id){
+      const arr=daftarKey[id]||[];
+      kunciProvider[id]=arr.length?arr[indeksKey[id]%arr.length]:'';
     }
-
-    function renderStatusGeoKey(){
-      const jenis=labelKeyBerjalan();
-      updateTombolTersedia();
-      if(!state.geoApifyEnabled){
-        statusKeyGeo.textContent='Geoapify nonaktif — generate memakai Google/OSM.';
-        statusKeyGeo.className='text-[11px] text-slate-500';
-        keyTersimpanGeo.textContent='';
-        keyTersimpanGeo.className='text-[11px] font-mono break-all text-slate-500';
-        btnHapusKeyGeo.disabled=true;btnHapusKeyGeo.textContent='Tersedia (tidak bisa dihapus)';
-      } else if(state.geoApifyManual&&state.geoApifyValid){
-        statusKeyGeo.textContent='✓ Key manual valid & aktif.';
-        statusKeyGeo.className='text-[11px] text-emerald-400';
-        keyTersimpanGeo.textContent='Key aktif (manual): '+state.geoApifyKey;
-        keyTersimpanGeo.className='text-[11px] font-mono break-all text-emerald-400/80';
-        btnHapusKeyGeo.disabled=false;btnHapusKeyGeo.textContent='Hapus Key';
-      } else if(state.geoApifyManual&&!state.geoApifyValid){
-        statusKeyGeo.textContent='⚠️ Key manual belum valid — generate tidak berjalan.';
-        statusKeyGeo.className='text-[11px] text-rose-400';
-        keyTersimpanGeo.textContent='Key (manual): '+state.geoApifyKey;
-        keyTersimpanGeo.className='text-[11px] font-mono break-all text-rose-400/80';
-        btnHapusKeyGeo.disabled=false;btnHapusKeyGeo.textContent='Hapus Key';
-      } else {
-        if(state.geoApifyValid){
-          statusKeyGeo.textContent='✓ Key '+jenis+' aktif.';
-          statusKeyGeo.className='text-[11px] text-sky-400';
-          keyTersimpanGeo.textContent='Key aktif ('+jenis+'): '+state.geoApifyKey;
-          keyTersimpanGeo.className='text-[11px] font-mono break-all text-sky-400/80';
-        } else {
-          statusKeyGeo.textContent='✗ Semua key tersedia gagal/limit — generate akan memakai Google/OSM.';
-          statusKeyGeo.className='text-[11px] text-rose-400';
-          keyTersimpanGeo.textContent='';
-          keyTersimpanGeo.className='text-[11px] font-mono break-all text-slate-500';
+    URUTAN_PROVIDER.forEach(sinkronKunci);
+    function rotasiKunci(id){
+      const arr=daftarKey[id]||[];
+      if(arr.length<2)return false;
+      indeksKey[id]=(indeksKey[id]+1)%arr.length;
+      sinkronKunci(id);
+      return true;
+    }
+    async function cobaSemuaKey(id,fn){
+      const total=(daftarKey[id]||[]).length||1;
+      let errTerakhir=null;
+      for(let n=0;n<total;n++){
+        try{return await fn(keyAktif(id));}
+          catch(e){
+          errTerakhir=e;
+          const pesan=String((e&&e.message)||'');
+          const perluGanti=/HTTP (401|403|429)/.test(pesan)||/abort|network/i.test(pesan);
+          if(!perluGanti||!rotasiKunci(id))throw e;
+          showToast('Key '+labelProvider(id)+' gagal ('+pesan+') → mencoba key cadangan.');
         }
-        btnHapusKeyGeo.disabled=true;btnHapusKeyGeo.textContent='Tersedia (tidak bisa dihapus)';
       }
-      btnTesKeyGeo.disabled=!inputKeyGeoapify.value.trim();
-      updateBadge();
+      throw errTerakhir||new Error('Semua key gagal');
     }
 
-    document.getElementById('btnSimpanKeyGeo').addEventListener('click',async()=>{
-      const v=inputKeyGeoapify.value.trim();
-      if(!v){statusKeyGeo.textContent='Tempel key dulu.';return;}
-      if(v.includes('://')){statusKeyGeo.textContent='✗ Itu URL, bukan API key.';statusKeyGeo.className='text-[11px] text-rose-400';return;}
-      if(isKeyTersedia(v)){
-        state.geoApifyEnabled=true;
-        state.geoApifyManual=false;
-        state.geoApifyBadKeys.clear();
-        const res=await validasiKeyGeo(v);
-        if(res.ok){
-          state.geoApifyKey=v;state.geoApifyValid=true;
-          hapusLS('rys_geoapify_key');
-          renderStatusGeoKey();
-          statusKeyGeo.textContent='✓ Key ini adalah key tersedia — diaktifkan sebagai key tersedia.';
-          statusKeyGeo.className='text-[11px] text-emerald-400';
-        }else{
-          state.geoApifyValid=false;
-          renderStatusGeoKey();
-          statusKeyGeo.textContent='✗ Key tersedia ini sedang gagal/limit (HTTP '+(res.status||'?')+').';
-          statusKeyGeo.className='text-[11px] text-rose-400';
-        }
-        inputKeyGeoapify.value='';
-        return;
-      }
-      const btn=document.getElementById('btnSimpanKeyGeo');btn.disabled=true;
-      statusKeyGeo.textContent='Memeriksa key…';statusKeyGeo.className='text-[11px] text-amber-300';
-      const res=await validasiKeyGeo(v);
-      if(res.ok){
-        state.geoApifyEnabled=true;
-        state.geoApifyKey=v;state.geoApifyManual=true;state.geoApifyValid=true;state.geoApifyBadKeys.clear();
-        tulisLS('rys_geoapify_key',v);
-        if(state.streetsOnline){state.syncSource='geoapify';}
-        renderStatusGeoKey();
-        statusKeyGeo.textContent='✓ Key manual valid & aktif. Contoh: '+res.contoh;
-        statusKeyGeo.className='text-[11px] text-emerald-400';
-      }else{
-        state.geoApifyValid=false;
-        renderStatusGeoKey();
-        statusKeyGeo.textContent='✗ Key manual TIDAK VALID (HTTP '+(res.status||'?')+') — tidak disimpan. Gunakan key tersedia atau key valid.';
-        statusKeyGeo.className='text-[11px] text-rose-400';
-      }
-      inputKeyGeoapify.value='';
-      btn.disabled=false;
-    });
+    const pilihProvider=document.getElementById('pilihProvider'),
+          inputKeyProvider=document.getElementById('inputKeyProvider'),
+          statusKeyProvider=document.getElementById('statusKeyProvider'),
+          hintProvider=document.getElementById('hintProvider'),
+          btnTampilkanKey=document.getElementById('btnTampilkanKey'),
+          ikonMataKey=document.getElementById('ikonMataKey'),
+          btnSimpanKeyProvider=document.getElementById('btnSimpanKeyProvider'),
+          btnTesKeyProvider=document.getElementById('btnTesKeyProvider'),
+          btnHapusKeyProvider=document.getElementById('btnHapusKeyProvider');
+    let keyVisible=false;
 
-    btnTesKeyGeo.addEventListener('click',async()=>{
-      const kunciInput=inputKeyGeoapify.value.trim();
-      if(!kunciInput){
-        statusKeyGeo.textContent='Kolom key kosong — tempel key di kolom untuk dites.';
-        statusKeyGeo.className='text-[11px] text-amber-300';
-        return;
-      }
-      btnTesKeyGeo.disabled=true;
-      statusKeyGeo.textContent='Menguji key di kolom…';
-      statusKeyGeo.className='text-[11px] text-amber-300';
-      const res=await validasiKeyGeo(kunciInput);
-      if(res.ok){
-        statusKeyGeo.textContent='✓ Key di kolom valid! Contoh: '+res.contoh+' — klik Simpan untuk memakainya.';
-        statusKeyGeo.className='text-[11px] text-emerald-400';
-      }else{
-        statusKeyGeo.textContent='✗ Key di kolom TIDAK VALID (HTTP '+(res.status||'?')+').';
-        statusKeyGeo.className='text-[11px] text-rose-400';
-      }
-      btnTesKeyGeo.disabled=false;
-    });
+    function labelProvider(id){return (PROVIDER_INFO[id]&&PROVIDER_INFO[id].label)||id;}
+    function butuhKey(id){return !!(PROVIDER_INFO[id]&&PROVIDER_INFO[id].butuhKey);}
+    function keyAktif(id){return kunciProvider[id||providerDipilih]||'';}
+    function providerKena403(e){return /403/.test(String((e&&e.message)||''));}
 
-    inputKeyGeoapify.addEventListener('input',()=>{btnTesKeyGeo.disabled=!inputKeyGeoapify.value.trim();});
-
-    btnGunakanTersedia.addEventListener('click',async()=>{
-      btnGunakanTersedia.disabled=true;
-      if(!state.geoApifyEnabled || state.geoApifyManual){
-        state.geoApifyEnabled=true;
-        state.geoApifyManual=false;
-        state.geoApifyValid=false;
-        state.geoApifyBadKeys.clear();
-        hapusLS('rys_geoapify_key');
-        statusKeyGeo.textContent='Menguji key tersedia…';statusKeyGeo.className='text-[11px] text-amber-300';
-        let hidup=null;
-        for(const key of KEYS_GEOPIFY_DEFAULT){
-          const res=await validasiKeyGeo(key);
-          if(res.ok){hidup=key;break;}
-        }
-        if(hidup){state.geoApifyKey=hidup;state.geoApifyValid=true;inputKeyGeoapify.value=hidup;}
-        else{state.geoApifyKey=KEYS_GEOPIFY_DEFAULT[0];inputKeyGeoapify.value='';}
-        renderStatusGeoKey();
-        if(state.streetsOnline&&state.geoApifyValid){state.syncSource='geoapify';}
-      }else{
-        state.geoApifyEnabled=false;
-        state.geoApifyManual=false;
-        state.geoApifyValid=false;
-        const manualKey=bacaLS('rys_geoapify_key','');
-        state.geoApifyKey=manualKey||'';
-        inputKeyGeoapify.value=manualKey;
-        renderStatusGeoKey();
-        statusKeyGeo.textContent='Geoapify dimatikan — generate memakai Google/OSM.';
-        statusKeyGeo.className='text-[11px] text-amber-300';
+    /* ---------- toast ---------- */
+    let toastTimer=null;
+    function showToast(pesan){
+      let el=document.getElementById('rysToast');
+      if(!el){
+        el=document.createElement('div');
+        el.id='rysToast';
+        el.className='fixed left-1/2 -translate-x-1/2 bottom-6 z-[60] max-w-[92vw] text-center rounded-xl bg-amber-500/15 ring-1 ring-amber-400/40 text-amber-200 text-xs font-semibold px-4 py-2.5 backdrop-blur-xl shadow-xl shadow-black/40 opacity-0 transition-opacity duration-200 pointer-events-none';
+        document.body.appendChild(el);
       }
-      btnGunakanTersedia.disabled=false;
-    });
-
-    btnHapusKeyGeo.addEventListener('click',async()=>{
-      state.geoApifyEnabled=true;
-      state.geoApifyManual=false;state.geoApifyValid=false;state.geoApifyBadKeys.clear();
-      hapusLS('rys_geoapify_key');
-      btnGunakanTersedia.disabled=true;
-      statusKeyGeo.textContent='Kembali ke key tersedia…';statusKeyGeo.className='text-[11px] text-amber-300';
-      let hidup=null;
-      for(const key of KEYS_GEOPIFY_DEFAULT){
-        const res=await validasiKeyGeo(key);
-        if(res.ok){hidup=key;break;}
-      }
-      if(hidup){state.geoApifyKey=hidup;state.geoApifyValid=true;inputKeyGeoapify.value=hidup;}
-      else{state.geoApifyKey=KEYS_GEOPIFY_DEFAULT[0];inputKeyGeoapify.value='';}
-      renderStatusGeoKey();
-      if(state.streetsOnline&&state.geoApifyValid){state.syncSource='geoapify';}
-      btnGunakanTersedia.disabled=false;
-    });
-
-    async function autoTesGeo(){
-      if(!navigator.onLine){renderStatusGeoKey();return;}
-      if(!state.geoApifyEnabled || state.geoApifyManual){renderStatusGeoKey();return;}
-      statusKeyGeo.textContent='Auto-test key tersedia…';statusKeyGeo.className='text-[11px] text-amber-300';
-      let hidup=null;
-      for(const key of KEYS_GEOPIFY_DEFAULT){
-        const res=await validasiKeyGeo(key);
-        if(res.ok){hidup=key;break;}
-      }
-      if(hidup){state.geoApifyKey=hidup;state.geoApifyValid=true;}
-      else{state.geoApifyKey=KEYS_GEOPIFY_DEFAULT[0];state.geoApifyValid=false;}
-      inputKeyGeoapify.value='';
-      renderStatusGeoKey();
-      if(state.streetsOnline&&state.geoApifyValid){state.syncSource='geoapify';}
-      updateBadge();
+      el.textContent=pesan;
+      el.classList.remove('opacity-0');
+      clearTimeout(toastTimer);
+      toastTimer=setTimeout(()=>el.classList.add('opacity-0'),4500);
     }
-    renderStatusGeoKey();
 
-    // ================= GOOGLE KEY =================
-    const inputKeyGoogle=document.getElementById('inputKeyGoogle'),statusKey=document.getElementById('statusKey'),keyTersimpanGoogle=document.getElementById('keyTersimpanGoogle'),btnTampilkanGoogle=document.getElementById('btnTampilkanGoogle'),ikonMataGoogle=document.getElementById('ikonMataGoogle'),btnTesKey=document.getElementById('btnTesKey');
-    let googleVisible=false;
-    btnTampilkanGoogle.addEventListener('click',()=>{
-      googleVisible=!googleVisible;
-      inputKeyGoogle.type=googleVisible?'text':'password';
-      ikonMataGoogle.src='https://unpkg.com/lucide-static@1.44.0/icons/'+(googleVisible?'eye-off':'eye')+'.svg';
-    });
-    function renderStatusKey(){
-      if(state.googleKey){
-        statusKey.textContent='✓ Key tersimpan.';statusKey.className='text-[11px] text-emerald-400';
-        keyTersimpanGoogle.textContent='Key aktif: '+state.googleKey;keyTersimpanGoogle.className='text-[11px] font-mono break-all text-emerald-400/80';
-      }else{
-        statusKey.textContent='Kosong — tidak dipakai.';statusKey.className='text-[11px] text-slate-500';
-        keyTersimpanGoogle.textContent='';keyTersimpanGoogle.className='text-[11px] font-mono break-all text-slate-500';
+    /* ---------- API per provider ---------- */
+    async function reverseProvider(id,lat,lng,keyOverride){
+      const key=(keyOverride!==undefined&&keyOverride!==null)?keyOverride:keyAktif(id);
+      if(id==='geoapify'){
+        return await cobaSemuaKey('geoapify',async(k)=>{
+          const j=await fetchJSON('https://api.geoapify.com/v1/geocode/reverse?lat='+lat+'&lon='+lng+'&apiKey='+encodeURIComponent(k));
+          const p=j.features&&j.features[0]&&j.features[0].properties;
+          if(!p)return null;
+          return {jalan:bersihkanJalan(p.street||''),alamat:String(p.formatted||'').replace(/,\s*Indonesia\s*$/i,'').trim()||null};
+        });
       }
-      btnTesKey.disabled=!inputKeyGoogle.value.trim();
-      updateBadge();
+      if(id==='google'){
+        const url='https://maps.googleapis.com/maps/api/geocode/json?latlng='+lat+','+lng+'&language=id&key='+encodeURIComponent(key);
+        let j;try{j=await fetchJSON(url);}catch(e){j=await jsonp(url);}
+        if(j.status!=='OK'||!j.results||!j.results.length)return null;
+        const r0=j.results[0];
+        const rute=(r0.address_components||[]).filter(x=>x.types.indexOf('route')>=0)[0];
+        return {jalan:rute?bersihkanJalan(rute.long_name):'',alamat:r0.formatted_address||null};
+      }
+      if(id==='locationiq'){
+        const j=await fetchJSON('https://us1.locationiq.com/v1/reverse?key='+encodeURIComponent(key)+'&lat='+lat+'&lon='+lng+'&format=json&accept-language=id&addressdetails=1');
+        const a=j.address||{};
+        const raw=a.road||a.pedestrian||a.footway||a.residential||a.suburb||'';
+        return {jalan:bersihkanJalan(raw),alamat:String(j.display_name||'').replace(/,\s*Indonesia\s*$/i,'').trim()||null};
+      }
+      if(id==='photon'){
+        const j=await fetchJSON('https://photon.komoot.io/reverse?lat='+lat+'&lon='+lng);
+        const f=(j.features||[])[0];if(!f)return null;
+        const p=f.properties||{};
+        const raw=p.street||p.name||p.locality||'';
+        const bagian=[p.name,p.street,p.district,p.city,p.state].filter(Boolean);
+        return {jalan:bersihkanJalan(raw),alamat:bagian.join(', ')||null};
+      }
+      const j=await fetchJSON('https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat='+lat+'&lon='+lng+'&zoom=18&addressdetails=1&accept-language=id');
+      const a=j.address||{};
+      const raw=a.road||a.pedestrian||a.footway||a.highway||a.service||a.path||'';
+      return {jalan:bersihkanJalan(raw),alamat:String(j.display_name||'').replace(/,\s*Indonesia\s*$/i,'').trim()||null};
     }
-    inputKeyGoogle.addEventListener('input',()=>{btnTesKey.disabled=!inputKeyGoogle.value.trim();});
-    document.getElementById('btnSimpanKey').addEventListener('click',()=>{
-      const v=inputKeyGoogle.value.trim();
-      if(!v){statusKey.textContent='Tempel key dulu.';return;}
-      if(v.includes('://')){statusKey.textContent='✗ Itu URL, bukan API key.';statusKey.className='text-[11px] text-rose-400';return;}
-      state.googleKey=v;tulisLS('rys_google_key',v);
-      renderStatusKey();inputKeyGoogle.value='';
-    });
-    document.getElementById('btnHapusKey').addEventListener('click',()=>{state.googleKey='';hapusLS('rys_google_key');renderStatusKey();if(state.streetsOnline){state.syncSource=state.geoApifyValid?'geoapify':'osm';}else state.syncSource='offline';updateBadge();});
-    btnTesKey.addEventListener('click',async()=>{
-      const kunciInput=inputKeyGoogle.value.trim();
-      if(!kunciInput){statusKey.textContent='Kolom key kosong.';return;}
-      btnTesKey.disabled=true;statusKey.textContent='Menguji key…';statusKey.className='text-[11px] text-amber-300';
+
+    async function cariKotaProvider(id,nama){
+      const key=keyAktif(id);
       try{
-        const city=getCity();const j=await geocodeGoogle(city.pusat[0],city.pusat[1]);
-        if(j.status==='OK'&&j.results.length){statusKey.textContent='✓ Key valid! Contoh: '+j.results[0].formatted_address;statusKey.className='text-[11px] text-emerald-400';}
-        else{statusKey.textContent='✗ Respon Google: '+j.status;statusKey.className='text-[11px] text-rose-400';}
-      }catch(e){statusKey.textContent='✗ Gagal terhubung ke Google: '+e.message;statusKey.className='text-[11px] text-rose-400';}
-      finally{btnTesKey.disabled=false;}
+        if(id==='geoapify'){
+          const j=await fetchJSON('https://api.geoapify.com/v1/geocode/search?text='+encodeURIComponent(nama+', Indonesia')+'&lang=id&limit=1&apiKey='+encodeURIComponent(key));
+          const f=(j.features||[])[0];if(!f)return null;const p=f.properties;
+          return {lat:p.lat,lon:p.lon,nama:p.city||p.county||p.state||nama,provinsi:p.state||'Indonesia'};
+        }
+        if(id==='google'){
+          const j=await fetchJSON('https://maps.googleapis.com/maps/api/geocode/json?address='+encodeURIComponent(nama+', Indonesia')+'&language=id&key='+encodeURIComponent(key));
+          if(j.status!=='OK'||!j.results||!j.results.length)return null;
+          const r=j.results[0];
+          return {lat:r.geometry.location.lat,lon:r.geometry.location.lng,nama:nama,provinsi:'Indonesia'};
+        }
+        if(id==='locationiq'){
+          const j=await fetchJSON('https://us1.locationiq.com/v1/search?key='+encodeURIComponent(key)+'&q='+encodeURIComponent(nama+', Indonesia')+'&format=json&limit=1&accept-language=id');
+          if(!Array.isArray(j)||!j.length)return null;
+          return {lat:+j[0].lat,lon:+j[0].lon,nama:nama,provinsi:'Indonesia'};
+        }
+        if(id==='photon'){
+          const j=await fetchJSON('https://photon.komoot.io/api?q='+encodeURIComponent(nama+', Indonesia')+'&limit=1&lang=id');
+          const f=(j.features||[])[0];if(!f)return null;
+          const c=f.geometry&&f.geometry.coordinates;if(!c)return null;
+          const p=f.properties||{};
+          return {lat:c[1],lon:c[0],nama:p.city||p.name||nama,provinsi:p.state||'Indonesia'};
+        }
+        const j=await fetchJSON('https://nominatim.openstreetmap.org/search?format=jsonv2&q='+encodeURIComponent(nama+' Indonesia')+'&countrycodes=id&limit=1&accept-language=id');
+        if(!Array.isArray(j)||!j.length)return null;
+        return {lat:+j[0].lat,lon:+j[0].lon,nama:nama,provinsi:'Indonesia'};
+      }catch(e){return null;}
+    }
+
+    async function ambilPOIProvider(kategori,digunakanSet){
+      for(let i=0;i<3;i++){
+        const p=titikAcakDalamRadius(getCity());
+        try{
+            const j=await cobaSemuaKey('geoapify',async(k)=>{
+            return await fetchJSON('https://api.geoapify.com/v2/places?lat='+p.lat+'&lon='+p.lng+'&radius=500&limit=10&categories='+encodeURIComponent(kategori)+'&apiKey='+encodeURIComponent(k));
+          });
+          for(const f of (j.features||[])){
+            const pr=f.properties;
+            if(!pr||!pr.street||!pr.name)continue;
+            const alamat=String(pr.formatted||'').replace(/,\s*Indonesia\s*$/i,'').trim();
+            if(!alamat||digunakanSet.has(alamat))continue;
+            const g=f.geometry&&f.geometry.coordinates;
+            return {
+              alamat:alamat,
+              jalan:bersihkanJalan(pr.street||''),
+              namaPoi:pr.name||'',
+              src:'Geoapify · POI',
+              lat:g?g[1]:p.lat,
+              lng:g?g[0]:p.lng
+            };
+          }
+        }catch(e){if(providerKena403(e))throw e;}
+        await sleep(150);
+      }
+      return null;
+    }
+
+    /* ---------- UI key ---------- */
+    function renderPilihProvider(){
+      pilihProvider.innerHTML='';
+      URUTAN_PROVIDER.forEach(id=>{
+        const o=document.createElement('option');
+        o.value=id;
+        o.textContent=labelProvider(id)+(butuhKey(id)?(kunciProvider[id]?' ✓':' — belum ada key'):' (tanpa key)');
+        pilihProvider.appendChild(o);
+      });
+      pilihProvider.value=providerDipilih;
+    }
+    function maskKey(k){
+      if(!k)return '';
+      return k.length<=10?k.slice(0,4)+'…':k.slice(0,6)+'…'+k.slice(-4);
+    }
+    function renderStatusProvider(pesan,jenis){
+      const id=providerDipilih;
+      const arr=daftarKey[id]||[];
+      const k=kunciProvider[id];
+      const punya=!!k;
+
+      hintProvider.textContent=butuhKey(id)
+        ? ('Daftar gratis di '+PROVIDER_INFO[id].daftar+'. Key sebaiknya dibatasi referer domain Anda.')
+        : 'Provider ini tidak memakai API key.';
+
+      inputKeyProvider.disabled=!butuhKey(id);
+      inputKeyProvider.value='';
+      inputKeyProvider.placeholder=!butuhKey(id)
+        ? 'Tidak perlu key'
+        : (punya
+            ? '✓ Key '+(sumberKey[id]==='manual'?'manual':'bawaan')+' aktif — tempel key lain untuk menimpa'
+            : 'Tempel API key');
+
+      if(butuhKey(id)&&punya){
+        statusKeyProvider.textContent='✓ Key '+(sumberKey[id]==='manual'?'manual':'bawaan')+' ('+maskKey(k)+')'
+          +(arr.length>1?' · '+arr.length+' key, aktif #'+(indeksKey[id]+1):'');
+        statusKeyProvider.className='text-[11px] text-emerald-400';
+      }else if(butuhKey(id)){
+        statusKeyProvider.textContent='Belum ada key '+labelProvider(id)+' — akan otomatis pakai Photon/OSM.';
+        statusKeyProvider.className='text-[11px] text-amber-300';
+      }else{
+        statusKeyProvider.textContent='Tidak perlu key untuk provider ini.';
+        statusKeyProvider.className='text-[11px] text-slate-500';
+      }
+
+      if(pesan){
+        statusKeyProvider.textContent=pesan;
+        statusKeyProvider.className='text-[11px] '+(jenis||'text-slate-400');
+      }
+
+      btnSimpanKeyProvider.disabled=true;
+      btnTesKeyProvider.disabled=true;
+      btnHapusKeyProvider.disabled=sumberKey[id]!=='manual';
+      barisAksiKey.classList.toggle('hidden',sumberKey[id]!=='manual');
+
+      renderPilihProvider();
+    }
+
+    pilihProvider.addEventListener('change',()=>{
+      providerDipilih=pilihProvider.value;
+      tulisLS('rys_provider',providerDipilih);
+      renderStatusProvider();
+      updateBadge();
+      autoTestProvider();
     });
-    renderStatusKey();
+    btnTampilkanKey.addEventListener('click',()=>{
+      keyVisible=!keyVisible;
+      inputKeyProvider.type=keyVisible?'text':'password';
+      ikonMataKey.src='https://unpkg.com/lucide-static@1.44.0/icons/'+(keyVisible?'eye-off':'eye')+'.svg';
+    });
+    inputKeyProvider.addEventListener('input',()=>{
+      const id=providerDipilih;
+      const adaIsi=!!inputKeyProvider.value.trim();
+      barisAksiKey.classList.toggle('hidden',!(adaIsi||sumberKey[id]==='manual'));
+      btnSimpanKeyProvider.disabled=!adaIsi;
+      btnTesKeyProvider.disabled=!adaIsi;
+    });
+
+    btnSimpanKeyProvider.addEventListener('click',()=>{
+      const v=inputKeyProvider.value.trim();
+      if(!v)return;
+      if(v.indexOf('://')>=0){renderStatusProvider('✗ Itu URL, bukan API key.','text-rose-400');return;}
+      const arr=pecahKeys(v);
+      if(!arr.length){renderStatusProvider('Key tidak terbaca.','text-rose-400');return;}
+      daftarKey[providerDipilih]=arr;
+      indeksKey[providerDipilih]=0;
+      sumberKey[providerDipilih]='manual';
+      sinkronKunci(providerDipilih);
+      tulisLS('rys_keys_'+providerDipilih,arr.join(','));
+      renderStatusProvider('✓ '+arr.length+' key manual disimpan.','text-emerald-400');
+      updateBadge();
+      autoTestProvider();
+    });
+
+    btnTesKeyProvider.addEventListener('click',async()=>{
+      const id=providerDipilih;
+      if(!butuhKey(id))return;
+      const kunciUji=inputKeyProvider.value.trim();
+      if(!kunciUji)return;
+      btnTesKeyProvider.disabled=true;
+      renderStatusProvider('Menguji key di kolom…','text-amber-300');
+      try{
+        const r=await reverseProvider(id,-6.1754,106.8272,kunciUji);
+        renderStatusProvider(r&&r.alamat
+          ? '✓ Key valid. Contoh: '+r.alamat
+          : '⚠ Key diterima, alamat contoh kosong.','text-emerald-400');
+      }catch(e){
+        renderStatusProvider(providerKena403(e)
+          ? '✗ Key ditolak (403) — domain ini belum terdaftar di referer provider.'
+          : '✗ Gagal: '+e.message,'text-rose-400');
+      }
+      btnTesKeyProvider.disabled=false;
+    });
+
+    btnHapusKeyProvider.addEventListener('click',()=>{
+      const id=providerDipilih;
+      hapusLS('rys_keys_'+id);
+      daftarKey[id]=pecahKeys(DEFAULT_KEYS[id]);
+      indeksKey[id]=0;
+      sumberKey[id]=daftarKey[id].length?'bawaan':'kosong';
+      sinkronKunci(id);
+      renderStatusProvider(daftarKey[id].length
+        ? 'Key manual dihapus — kembali memakai key bawaan.'
+        : 'Semua key '+labelProvider(id)+' dihapus.','text-amber-300');
+      updateBadge();
+      autoTestProvider();
+    });
+
+        let sedangTesKey=false;
+    async function autoTestProvider(){
+      const id=providerDipilih;
+      if(!butuhKey(id)||!kunciProvider[id]||sedangTesKey){renderStatusProvider();return;}
+      sedangTesKey=true;
+      const asal=sumberKey[id]==='manual'?'manual':'bawaan';
+      statusKeyProvider.textContent='Menguji key '+asal+'…';
+      statusKeyProvider.className='text-[11px] text-amber-300';
+      try{
+        const r=await reverseProvider(id,-6.1754,106.8272);
+        if(r&&r.alamat){
+          statusKeyProvider.textContent='✓ Key '+asal+' berfungsi · '+maskKey(kunciProvider[id]);
+          statusKeyProvider.className='text-[11px] text-emerald-400';
+        }else{
+          statusKeyProvider.textContent='⚠ Key '+asal+' diterima, tapi tidak mengembalikan alamat.';
+          statusKeyProvider.className='text-[11px] text-amber-300';
+        }
+      }catch(e){
+        statusKeyProvider.textContent=providerKena403(e)
+          ? '✗ Key ditolak (403) — domain ini belum terdaftar di referer '+labelProvider(id)+'.'
+          : '✗ Key gagal: '+e.message;
+        statusKeyProvider.className='text-[11px] text-rose-400';
+      }
+      sedangTesKey=false;
+    }
+    async function autoTesGeo(){renderStatusProvider();updateBadge();await autoTestProvider();}
+    renderStatusProvider();
 
     document.getElementById('btnBersihkanNama').addEventListener('click',()=>{const ta=document.getElementById('inputNama');ta.value='';ta.focus();});
     document.getElementById('btnBersihkanPatokan').addEventListener('click',()=>{const ta=document.getElementById('inputPatokan');ta.value='';ta.focus();});
@@ -1237,41 +1348,59 @@ grupAksi.appendChild(btnCopyTel);
       const mode=getMode();
       const btnGenerate=document.getElementById('btnGenerate');
       if(mode==='presisi'&&!navigator.onLine){showError('Mode Presisi butuh koneksi internet. Gunakan mode Sintesis.');return;}
-      if(mode==='presisi'&&state.geoApifyEnabled&&state.geoApifyManual&&!state.geoApifyValid){
-        showError('Key manual tidak valid — masukkan key manual valid atau nyalakan "Key tersedia".');
+            if(mode==='presisi'&&butuhKey(providerDipilih)&&!keyAktif(providerDipilih)){
+        showError('Provider "'+labelProvider(providerDipilih)+'" butuh API key. Isi key-nya, atau pilih Photon / OpenStreetMap.');
         return;
       }
       hasilTerakhir=[];daftarUl.innerHTML='';
       const digunakanSet=new Set();
       const teleponSet=new Set();
-
+      let fallbackSudahDiberitahu=false;
       if(mode==='presisi'){
         btnGenerate.disabled=true;progresHasil.classList.remove('hidden');
         const kategoriSet=new Set();
         tipeDipilih.forEach(t=>{kategoriPOIUntukTipe(t).split(',').forEach(k=>kategoriSet.add(k));});
-        const categories=[...kategoriSet].join(',');
+        const categories=[...kategoriSet].slice(0,5).join(',');
         try{
           for(let i=0;i<jumlah;i++){
             progresHasil.textContent='Mengambil tempat/jalan nyata dari peta… ('+(i+1)+'/'+jumlah+')';
             let a=null;
-            if(state.geoApifyEnabled && state.geoApifyKey && state.geoApifyValid){
+            if(providerDipilih==='geoapify'&&keyAktif('geoapify')){
               for(let att=0;att<3&&!a;att++){
-                const poi=await ambilPOIGeoapify(categories,digunakanSet);
-                if(poi){digunakanSet.add(poi.alamat);a={nama:pick(daftarNama),patokan:pick(daftarPatokan),src:poi.src,alamat:poi.alamat,lat:poi.lat,lng:poi.lng};if(poi.cache)a.cache=true;}
+                const poi=await ambilPOIProvider(categories,digunakanSet);
+                if(poi){
+                  digunakanSet.add(poi.alamat);
+                  const kota=getCity();
+                  a={
+                    nama:pick(daftarNama),
+                    patokan:pick(daftarPatokan),
+                    src:poi.src,
+                    lat:poi.lat,
+                    lng:poi.lng,
+                    poi:poi.namaPoi,
+                    baris:buatBarisAlamat(pick(tipeDipilih),poi.jalan||pick(poolJalan())),
+                    rt:pad2(rand(1,20)),
+                    rw:pad2(rand(1,20)),
+                    kota:kota.nama,
+                    provinsi:kota.provinsi
+                  };
+                  a.alamat=alamatPenuh(a);
+                }
               }
             }
             if(!a){
               for(let att=0;att<8&&!a;att++){
                 const p=await ambilJalanDenganFallback();
+                if(p.provider&&p.provider!==providerDipilih&&!fallbackSudahDiberitahu&&butuhKey(providerDipilih)){
+                  showToast('Mode "'+labelProvider(providerDipilih)+'" error → otomatis beralih ke "'+labelProvider(p.provider)+'".');
+                  fallbackSudahDiberitahu=true;
+                }
                 const cand=buatAlamatLengkap(p.jalan,daftarNama,daftarPatokan,p.src,tipeDipilih);
                 const kunci=cand.alamat;
                 if(!digunakanSet.has(kunci)){
                   digunakanSet.add(kunci);
                   if(p.lat!=null){cand.lat=p.lat;cand.lng=p.lng;}
-                  if(p.cache)cand.cache=true;
                   a=cand;
-                  if(p.src.indexOf('OSM')>=0)await sleep(1000);
-                  else if(p.src.indexOf('Geoapify')>=0)await sleep(120);
                 }
               }
             }
@@ -1290,6 +1419,8 @@ grupAksi.appendChild(btnCopyTel);
       }
 
       const sumberLabel=labelHasil(hasilTerakhir);
+	  const dipakai=[...new Set(hasilTerakhir.map(x=>x.src).filter(Boolean))];
+      if(dipakai.length)document.getElementById('statusSumberAktif').textContent='Sumber terpakai: '+dipakai.join(' · ');
       jumlahPill.textContent=jumlah+' alamat · '+sumberLabel;jumlahPill.classList.remove('hidden');
       hasilSection.classList.remove('hidden');hasilSection.scrollIntoView({behavior:'smooth',block:'start'});
     });
